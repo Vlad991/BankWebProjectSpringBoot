@@ -1,19 +1,24 @@
 package com.mybank.entity;
 
+import com.mybank.entity.date.Date;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 @Setter
 @Getter
 @NoArgsConstructor
 @Entity
-@Table(name = "users")
+@Table(name = "bank_users")
 public class User {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(generator="increment")
+    @GenericGenerator(name="increment", strategy = "increment")
     private Long id;
 
     @Column(name = "login")
@@ -25,6 +30,8 @@ public class User {
     @Column(name = "surname")
     private String surname;
 
+    @Type(type = "com.mybank.entity.date.DateType")
+    @Column(name = "birthday")
     private Date birthday;
 
     private Address address;
