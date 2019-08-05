@@ -21,7 +21,7 @@ public class User {
     @GenericGenerator(name="increment", strategy = "increment")
     private Long id;
 
-    @Column(name = "login")
+    @Column(name = "login", unique = true)
     private String login;
 
     @Column(name = "name")
@@ -38,10 +38,10 @@ public class User {
     @JoinColumn(name = "address_id")
     private Address address;
 
-    @Column(name = "email")
+    @Column(name = "email", unique = true)
     private String email;
 
-    @Column(name = "phone")
+    @Column(name = "phone", unique = true)
     private String phone;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)

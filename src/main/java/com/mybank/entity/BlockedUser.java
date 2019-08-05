@@ -21,6 +21,7 @@ public class BlockedUser {
     @OneToOne
     private User user;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "blocking_reason")
-    private String blockingReason;
+    private BlockingReason blockingReason;
 }
