@@ -1,7 +1,6 @@
 package com.mybank.converter;
 
 import com.mybank.dto.UserDTO;
-import com.mybank.entity.BlockedUser;
 import com.mybank.entity.User;
 import org.springframework.stereotype.Component;
 

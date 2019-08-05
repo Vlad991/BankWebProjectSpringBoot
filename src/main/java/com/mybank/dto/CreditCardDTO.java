@@ -16,7 +16,7 @@ import javax.validation.constraints.NotNull;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class CreditCardDTO {
     @NotNull(message = "Id is required")
-    private Long id;
+    private Long id;   // card number
 
     @NotNull(message = "Date is required")
     private CreditCardDate date;
