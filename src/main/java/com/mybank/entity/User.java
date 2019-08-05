@@ -1,5 +1,6 @@
 package com.mybank.entity;
 
+import com.mybank.Address;
 import com.mybank.entity.date.Date;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -8,7 +9,6 @@ import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
-import java.io.Serializable;
 
 @Setter
 @Getter
@@ -34,6 +34,8 @@ public class User {
     @Column(name = "birthday")
     private Date birthday;
 
+    @ManyToOne
+    @JoinColumn(name = "address_id")
     private Address address;
 
     @Column(name = "email")
