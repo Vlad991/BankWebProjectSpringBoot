@@ -44,4 +44,7 @@ public class User {
     private String phone;
 
     private List<CreditCard> cardList;
+
+    @OneToOne(mappedBy = "user")
+    private BlockedUser blocked;
 }
