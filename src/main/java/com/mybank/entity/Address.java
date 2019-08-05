@@ -1,6 +1,5 @@
-package com.mybank;
+package com.mybank.entity;
 
-import com.mybank.entity.User;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

@@ -1,6 +1,5 @@
 package com.mybank.entity;
 
-import com.mybank.Address;
 import com.mybank.entity.date.Date;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
