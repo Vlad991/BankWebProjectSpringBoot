@@ -8,6 +8,7 @@ import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Setter
 @Getter
@@ -43,6 +44,7 @@ public class User {
     @Column(name = "phone")
     private String phone;
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<CreditCard> cardList;
 
     @OneToOne(mappedBy = "user")

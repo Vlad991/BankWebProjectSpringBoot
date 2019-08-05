@@ -20,4 +20,7 @@ public class BlockedUser {
 
     @OneToOne
     private User user;
+
+    @Column(name = "blocking_reason")
+    private String blockingReason;
 }

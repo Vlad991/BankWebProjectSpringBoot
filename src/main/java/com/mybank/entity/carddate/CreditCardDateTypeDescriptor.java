@@ -1,4 +1,4 @@
-package com.mybank.entity.date;
+package com.mybank.entity.carddate;
 
 import org.hibernate.type.descriptor.WrapperOptions;
 import org.hibernate.type.descriptor.java.AbstractTypeDescriptor;
@@ -7,30 +7,30 @@ import org.hibernate.type.descriptor.sql.SqlTypeDescriptor;
 
 import java.sql.Types;
 
-public class DateTypeDescriptor extends AbstractTypeDescriptor<Date> {
-    public static final DateTypeDescriptor INSTANCE =
-            new DateTypeDescriptor();
+public class CreditCardDateTypeDescriptor extends AbstractTypeDescriptor<CreditCardDate> {
+    public static final CreditCardDateTypeDescriptor INSTANCE =
+            new CreditCardDateTypeDescriptor();
 
-    public DateTypeDescriptor() { //todo private
-        super(Date.class);
+    public CreditCardDateTypeDescriptor() { //todo private
+        super(CreditCardDate.class);
     }
 
     @Override
-    public String toString(Date value) {
+    public String toString(CreditCardDate value) {
         return value.toString();
     }
 
     @Override
-    public Date fromString(String string) {
-        return new Date(string);
+    public CreditCardDate fromString(String string) {
+        return new CreditCardDate(string);
     }
 
     @Override
-    public <X> X unwrap(Date value, Class<X> type, WrapperOptions options) {
+    public <X> X unwrap(CreditCardDate value, Class<X> type, WrapperOptions options) {
         if (value == null) {
             return null;
         }
-        if (Date.class.isAssignableFrom(type)) {
+        if (CreditCardDate.class.isAssignableFrom(type)) {
             return (X) value;
         }
         if (String.class.isAssignableFrom(type)) {
@@ -40,15 +40,15 @@ public class DateTypeDescriptor extends AbstractTypeDescriptor<Date> {
     }
 
     @Override
-    public <X> Date wrap(X value, WrapperOptions options) {
+    public <X> CreditCardDate wrap(X value, WrapperOptions options) {
         if (value == null) {
             return null;
         }
         if (String.class.isInstance(value)) {
             return fromString((String) value);
         }
-        if (Date.class.isInstance(value)) {
-            return (Date) value;
+        if (CreditCardDate.class.isInstance(value)) {
+            return (CreditCardDate) value;
         }
         throw unknownWrap(value.getClass());
     }
