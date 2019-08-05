@@ -43,5 +43,5 @@ public class UserDTO {
     @NotNull(message = "Password id required")
     private String password;
 
-    private Boolean isBlocked; // todo reason??
+    private boolean blocked; // todo reason??
 }

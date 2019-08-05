@@ -11,7 +11,7 @@ import javax.validation.constraints.NotNull;
 @NoArgsConstructor
 public class ReceiveMessage {  //client-side to server
     @NotNull(message = "type is required")
-    private String type;
+    private MessageType type;
     private String receiver;
     private String message;
 }
