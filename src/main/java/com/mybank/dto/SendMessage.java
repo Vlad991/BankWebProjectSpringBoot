@@ -15,5 +15,5 @@ public class SendMessage { //Server to client-side
     private MessageType type;
     private String sender; // login?? todo
     private String message;
-    private Set<String> activeClients;
+    private Set<String> activeUsers; //for Manager -> Clients, for Admin -> Managers
 }
