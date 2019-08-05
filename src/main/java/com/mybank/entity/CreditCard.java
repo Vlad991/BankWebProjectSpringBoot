@@ -22,21 +22,21 @@ public class CreditCard implements Serializable {
     private Long id;
 
     @Type(type = "com.mybank.entity.carddate.CreditCardDateType")
-    @Column(name = "date")
+    @Column(name = "date", nullable = false)
     private CreditCardDate date;
 
     @ManyToOne
-    @JoinColumn(name = "client_id")
+    @JoinColumn(name = "client_id", nullable = false)
     private User client; // only client!!! todo
 
-    @Column(name = "code", unique = true)
+    @Column(name = "code", unique = true, nullable = false)
     private int code;  // 000 todo card code type
 
     @Column(name = "sum")
     private int sum;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "status")
+    @Column(name = "status", nullable = false)
     private CreditCardStatus status;
 
     //private pin; todo
