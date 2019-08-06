@@ -48,13 +48,13 @@ dependencies {
     compile "org.springframework.boot:spring-boot-starter-logging"
     compile 'org.springframework.integration:spring-integration-core'
     compile 'org.springframework.boot:spring-boot-starter-actuator'
-//    compile 'org.springframework.kafka:spring-kafka'
+    compile 'org.springframework.kafka:spring-kafka'
     compile 'org.springframework.boot:spring-boot-starter-cache'
     compile 'org.springframework:spring-websocket'
 
     // Kafka
-//    compile 'org.springframework.cloud:spring-cloud-stream'
-//    compile 'org.springframework.cloud:spring-cloud-starter-stream-kafka'
+    compile 'org.springframework.cloud:spring-cloud-stream'
+    compile 'org.springframework.cloud:spring-cloud-starter-stream-kafka'
 
     // Redis
     compile 'org.springframework.data:spring-data-redis'
