@@ -1,12 +1,14 @@
 package com.mybank.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.mybank.dto.MessageType;
 import com.mybank.dto.ReceiveMessage;
+import com.mybank.dto.SendMessage;
 import com.mybank.entity.User;
+import com.mybank.service.WebSocketService;
 import com.mybank.service.data.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
@@ -31,7 +33,7 @@ public class WebSocketController extends TextWebSocketHandler {
     @Autowired
     private WebSocketService webSocketService;
 
-    private Map<String, WebSocketSession> activeUsers = new ConcurrentHashMap<>();
+    private Map<String, WebSocketSession> activeClients = new ConcurrentHashMap<>();
 
     private Map<String, WebSocketSession> activeManagers = new ConcurrentHashMap<>();
 
@@ -52,8 +54,8 @@ public class WebSocketController extends TextWebSocketHandler {
                 }
 
                 activeUsers.put(user.getLogin(), session);
-                sendActiveUsersList();
-                sendActiveManagerList();
+                sendActiveClientList();
+                sendActiveManagerList(); // todo ???
                 sendMessages(session);
 
             } else {
@@ -133,5 +135,51 @@ public class WebSocketController extends TextWebSocketHandler {
     @Override
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
         super.afterConnectionClosed(session, status);
+    }
+
+    private void sendErrorMessage() {
+        rrrr
+    }
+
+    private void sendActiveClientList() {
+        try {
+            Set<String> activeClientLogins = activeClients.keySet();
+            SendMessage sendMessage = new SendMessage();
+            sendMessage.setType(MessageType.ACTIVE_CLIENT_LIST);
+            sendMessage.setSender("system");
+            sendMessage.setMessage(null);
+            sendMessage.setActiveUsers(activeClientLogins);
+            TextMessage textMessage = new TextMessage(mapper.writeValueAsString(sendMessage));
+            sendAll(textMessage);
+        } catch (IOException e) {
+            log.error(e.getMessage());
+        }
+    }
+
+    private void sendActiveManagerList() {
+        try {
+            Set<String> activeManagerLogins = activeManagers.keySet();
+            SendMessage sendMessage = new SendMessage();
+            sendMessage.setType(MessageType.ACTIVE_MANAGER_LIST);
+            sendMessage.setSender("system");
+            sendMessage.setMessage(null);
+            sendMessage.setActiveUsers(activeManagerLogins);
+            TextMessage textMessage = new TextMessage(mapper.writeValueAsString(sendMessage));
+            sendAll(textMessage);
+        } catch (IOException e) {
+            log.error(e.getMessage());
+        }
+    }
+
+    private void sendAll(TextMessage textMessage) {
+        activeUsers.entrySet().stream()
+                .map(entry -> entry.getValue())
+                .forEach(session -> {
+                    try {
+                        session.sendMessage(textMessage);
+                    } catch (IOException e) {
+                        log.error(e.getMessage());
+                    }
+                });
     }
 }
