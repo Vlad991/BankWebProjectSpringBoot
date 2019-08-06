@@ -12,7 +12,7 @@ public class CreditCardConverter {
 
     public CreditCardDTO convertToDto(CreditCard card) {
         CreditCardDTO cardDTO = new CreditCardDTO();
-        cardDTO.setId(card.getId());
+        cardDTO.setNumber(card.getNumber());
         cardDTO.setDate(card.getDate());
         cardDTO.setClient(card.getClient());
         cardDTO.setCode(card.getCode());
@@ -23,7 +23,7 @@ public class CreditCardConverter {
 
     public CreditCard convertToEntity(CreditCardDTO cardDTO) {
         CreditCard card = new CreditCard();
-        card.setId(cardDTO.getId());
+        card.setNumber(cardDTO.getNumber());
         card.setClient(cardDTO.getClient());
         card.setDate(cardDTO.getDate());
         card.setCode(cardDTO.getCode());

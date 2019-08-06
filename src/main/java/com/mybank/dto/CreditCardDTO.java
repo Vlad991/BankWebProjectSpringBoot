@@ -7,16 +7,20 @@ import com.mybank.entity.carddate.CreditCardDate;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.validator.constraints.CreditCardNumber;
 
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 
 @Setter
 @Getter
 @NoArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class CreditCardDTO {
-    @NotNull(message = "Id is required")
-    private Long id;   // card number
+    @NotNull(message = "Number is required")
+    @CreditCardNumber
+    private String number;   // todo card number
 
     @NotNull(message = "Date is required")
     private CreditCardDate date;
@@ -25,6 +29,7 @@ public class CreditCardDTO {
     private User client;
 
     @NotNull(message = "Code is required")
+    @Size(min = 000, max = 999, message = "Code must be XXX")
     private int code;
 
     private int sum;

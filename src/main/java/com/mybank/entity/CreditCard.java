@@ -8,6 +8,7 @@ import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
+import javax.validation.constraints.Min;
 import java.io.Serializable;
 
 @Setter
@@ -17,9 +18,12 @@ import java.io.Serializable;
 @Table(name = "creditcards")
 public class CreditCard implements Serializable {
     @Id
-    @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="cards_seq")
-    @SequenceGenerator(name="cards_seq", initialValue = 1414000000, allocationSize = 1) // todo ??????? 0000 00000000 0000
+    @GeneratedValue(generator="increment")
+    @GenericGenerator(name="increment", strategy = "increment")
     private Long id;
+
+    @Column(name = "number", nullable = false, unique = true)
+    private String number; // todo validate 0000 0000 0000 0000 (validator)
 
     @Type(type = "com.mybank.entity.carddate.CreditCardDateType")
     @Column(name = "date", nullable = false)
