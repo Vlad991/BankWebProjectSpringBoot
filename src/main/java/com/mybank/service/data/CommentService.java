@@ -8,7 +8,6 @@ import java.util.List;
 
 @Service
 public class CommentService {
-
     private RedisTemplate<String, Comment> redisTemplate;
 
     public CommentService(RedisTemplate<String, Comment> redisTemplate) {

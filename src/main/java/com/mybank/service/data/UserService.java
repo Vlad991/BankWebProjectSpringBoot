@@ -14,7 +14,6 @@ import java.util.List;
 
 @Service
 public class UserService {
-
     //    @Autowired   //todo
     UserRepository userRepository;
 
@@ -53,7 +52,7 @@ public class UserService {
             throw new UserNotFoundException();
         }
         BlockedUser blockedUser = user.getBlocked();
-        if(blockedUser == null){
+        if (blockedUser == null) {
             throw new UserNotBlockedException();
         }
 

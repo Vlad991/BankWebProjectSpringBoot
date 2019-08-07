@@ -33,7 +33,7 @@ public class CreditCard implements Serializable {
     @JoinColumn(name = "client_id", nullable = false)
     private User client; // only client!!! todo
 
-    @Column(name = "code", unique = true, nullable = false)
+    @Column(name = "code", nullable = false)
     private int code;  // 000 todo card code type
 
     @Column(name = "sum")

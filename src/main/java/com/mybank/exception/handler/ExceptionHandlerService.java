@@ -11,7 +11,10 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 @ControllerAdvice
 public class ExceptionHandlerService {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler({UserAlreadyExistsException.class,
+    @ExceptionHandler({
+            CardNotFoundException.class,
+            CreditCardAlreadyExistsException.class,
+            UserAlreadyExistsException.class,
             UserAlreadyBlockedException.class,
             UserNotFoundException.class,
             UserLoginNotNullException.class,

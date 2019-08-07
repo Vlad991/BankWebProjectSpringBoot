@@ -5,14 +5,13 @@ import com.mybank.entity.User;
 import com.mybank.repository.PrivateMessageRepository;
 import com.mybank.repository.UserRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Service
 public class PrivateMessageService {
-
     private PrivateMessageRepository privateMessageRepository;
-
     private UserRepository userRepository;
 
     public PrivateMessageService(PrivateMessageRepository privateMessageRepository, UserRepository userRepository) {
@@ -20,6 +19,7 @@ public class PrivateMessageService {
         this.userRepository = userRepository;
     }
 
+    @Transactional
     public void savePrivateMessageToDatabase(String senderLogin, String receiverLogin, String privateMessageBody) {
         User receiver = userRepository.findByLogin(receiverLogin);
         User sender = userRepository.findByLogin(senderLogin);

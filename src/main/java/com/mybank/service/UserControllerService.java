@@ -11,9 +11,7 @@ import java.util.List;
 
 @Service
 public class UserControllerService {
-
     private UserService userService;
-
     private UserConverter userConverter;
 
     public UserControllerService(UserService userService, UserConverter userConverter) {

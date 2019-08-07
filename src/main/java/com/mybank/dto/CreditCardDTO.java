@@ -19,7 +19,7 @@ import javax.validation.constraints.Size;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class CreditCardDTO {
     @NotNull(message = "Number is required")
-    @CreditCardNumber
+    @CreditCardNumber(ignoreNonDigitCharacters = true)
     private String number;   // todo card number
 
     @NotNull(message = "Date is required")

@@ -14,11 +14,8 @@ import java.util.List;
 @Service
 public class WebSocketService {
     private PrivateMessageService privateMessageService;
-
     private CommentService commentService;
-
     private PrivateMessageConverter privateMessageConverter;
-
     private CommentConverter commentConverter;
 
     public WebSocketService(PrivateMessageService privateMessageService, CommentService commentService, PrivateMessageConverter privateMessageConverter, CommentConverter commentConverter) {
