@@ -1,8 +1,6 @@
 package com.mybank.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.mybank.entity.Address;
-import com.mybank.entity.CreditCard;
 import com.mybank.entity.date.Date;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -30,7 +28,7 @@ public class UserDTO {
     private Date birthday;
 
     @NotNull(message = "Address is required")
-    private Address address;
+    private AddressDTO address;
 
     @NotNull(message = "Email is required")
     private String email;
@@ -38,7 +36,7 @@ public class UserDTO {
     @NotNull(message = "Phone is required")
     private String phone;
 
-    private List<CreditCard> cardList; //todo ask?
+//    private List<CreditCardDTO> cardList; //todo ask?
 
     @NotNull(message = "Password id required")
     private String password;

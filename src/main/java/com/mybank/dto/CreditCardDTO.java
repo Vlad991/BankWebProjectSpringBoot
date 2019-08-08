@@ -26,7 +26,7 @@ public class CreditCardDTO {
     private CreditCardDate date;
 
     @NotNull(message = "Client is required")
-    private User client;
+    private UserDTO client;
 
     @NotNull(message = "Code is required")
     @Size(min = 000, max = 999, message = "Code must be XXX")

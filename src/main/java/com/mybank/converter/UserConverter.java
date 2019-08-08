@@ -1,6 +1,7 @@
 package com.mybank.converter;
 
 import com.mybank.dto.UserDTO;
+import com.mybank.entity.CreditCard;
 import com.mybank.entity.User;
 import org.springframework.stereotype.Component;
 
@@ -9,6 +10,7 @@ import java.util.stream.Collectors;
 
 @Component
 public class UserConverter {
+    private AddressConverter addressConverter;
 
     public UserDTO convertToDto(User user) {
         UserDTO userDTO = new UserDTO();
@@ -16,10 +18,9 @@ public class UserConverter {
         userDTO.setName(user.getName());
         userDTO.setSurname(user.getSurname());
         userDTO.setBirthday(user.getBirthday());
-        userDTO.setAddress(user.getAddress());
+        userDTO.setAddress(addressConverter.convertToDto(user.getAddress()));
         userDTO.setEmail(user.getEmail());
         userDTO.setPhone(user.getPhone());
-        userDTO.setCardList(user.getCardList());
         if (user.getBlocked() != null) {
             userDTO.setBlocked(true);
         } else {
@@ -34,10 +35,9 @@ public class UserConverter {
         user.setLogin(userDTO.getLogin());
         user.setSurname(userDTO.getSurname());
         user.setBirthday(userDTO.getBirthday());
-        user.setAddress(userDTO.getAddress());
+        user.setAddress(addressConverter.convertToEntity(userDTO.getAddress()));
         user.setEmail(userDTO.getEmail());
         user.setPhone(userDTO.getPhone());
-        user.setCardList(userDTO.getCardList());
 //        if(userDTO.isBlocked()) {
 //            BlockedUser blockedUser = new BlockedUser();
 //            blockedUser.setUser(user);

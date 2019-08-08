@@ -9,12 +9,13 @@ import java.util.stream.Collectors;
 
 @Component
 public class CreditCardConverter {
+    private UserConverter userConverter;
 
     public CreditCardDTO convertToDto(CreditCard card) {
         CreditCardDTO cardDTO = new CreditCardDTO();
         cardDTO.setNumber(card.getNumber());
         cardDTO.setDate(card.getDate());
-        cardDTO.setClient(card.getClient());
+        cardDTO.setClient(userConverter.convertToDto(card.getClient()));
         cardDTO.setCode(card.getCode());
         cardDTO.setSum(card.getSum());
         cardDTO.setStatus(card.getStatus());
@@ -24,7 +25,7 @@ public class CreditCardConverter {
     public CreditCard convertToEntity(CreditCardDTO cardDTO) {
         CreditCard card = new CreditCard();
         card.setNumber(cardDTO.getNumber());
-        card.setClient(cardDTO.getClient());
+        card.setClient(userConverter.convertToEntity(cardDTO.getClient()));
         card.setDate(cardDTO.getDate());
         card.setCode(cardDTO.getCode());
         card.setSum(cardDTO.getSum());
