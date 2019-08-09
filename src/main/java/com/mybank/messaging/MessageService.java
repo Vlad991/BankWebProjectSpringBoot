@@ -1,5 +1,6 @@
 package com.mybank.messaging;
 
+import com.mybank.dto.CreditCardDTO;
 import com.mybank.dto.EventType;
 import com.mybank.dto.Payload;
 import com.mybank.dto.UserDTO;
@@ -42,6 +43,27 @@ public class MessageService {
                 .build();
 
         MessageChannel channel = resolver.resolveDestination("user-event-output");
+        if(!channel.send(message)){
+            log.error("Can not send message");
+        }
+    }
+
+    @EventListener
+    public void publishEvent(CreditCardDTO cardDTO){
+        Payload<CreditCardDTO> payload = new Payload<>();
+        payload.setEvent(EventType.CREATE.toString());
+        payload.setObjectToSend(cardDTO);
+
+        Map<String, String> headers = new HashMap<>();
+        headers.put("EventVersion", "v1");
+        headers.put("EntityVersion", "v1");
+
+        Message<Payload<CreditCardDTO>> message = MessageBuilder
+                .withPayload(payload)
+                .copyHeaders(headers)
+                .build();
+
+        MessageChannel channel = resolver.resolveDestination("card-event-output");
         if(!channel.send(message)){
             log.error("Can not send message");
         }
