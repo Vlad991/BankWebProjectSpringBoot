@@ -61,7 +61,7 @@ dependencies {
     compile 'redis.clients:jedis:2.9.0'
 
     // Security
-//    compile 'org.keycloak:keycloak-spring-security-adapter:4.8.1.Final'
+    compile 'org.keycloak:keycloak-spring-security-adapter:4.8.1.Final'
     compile 'org.springframework.boot:spring-boot-starter-security'
 
     // DB Connection
@@ -71,15 +71,15 @@ dependencies {
     compile group: 'org.projectlombok', name: 'lombok', version: '1.18.2'
 
     // Model Mapper
-//    compile group: 'org.modelmapper', name: 'modelmapper', version: '2.2.0'
-//    compile group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatype-hibernate4', version: '2.8.9'
-//    compile 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.8.9'
-//    compile(group: 'com.zaxxer', name: 'HikariCP', version: '3.2.0') {
-//        exclude(module: 'tools')
-//    }
+    compile group: 'org.modelmapper', name: 'modelmapper', version: '2.2.0'
+    compile group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatype-hibernate4', version: '2.8.9'
+    compile 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.8.9'
+    compile(group: 'com.zaxxer', name: 'HikariCP', version: '3.2.0') {
+        exclude(module: 'tools')
+    }
 
-//    compile 'com.google.guava:guava:21.0'
-//    compile 'com.jayway.jsonpath:json-path:2.2.0'
+    compile 'com.google.guava:guava:21.0'
+    compile 'com.jayway.jsonpath:json-path:2.2.0'
 //    compile 'org.liquibase:liquibase-core:3.6.3'
 
 //    testCompile 'org.mockito:mockito-core:2.8.9'
