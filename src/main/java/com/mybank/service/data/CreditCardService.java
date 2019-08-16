@@ -22,6 +22,15 @@ public class CreditCardService {
         return creditCardRepository.findAll();
     }
 
+    @Transactional // todo right parameter
+    public int sendSum(String senderCardNumber, String receiverCardNumber, int sum) {
+        CreditCard senderCard = findCreditCardByNumber(senderCardNumber);
+        CreditCard receiverCard = findCreditCardByNumber(receiverCardNumber);
+        senderCard.setSum(senderCard.getSum() - sum);
+        receiverCard.setSum(receiverCard.getSum() + sum);
+        return sum;
+    }
+
     public CreditCard findCreditCardByNumber(String number) {
         return creditCardRepository.findByNumber(number);
     }

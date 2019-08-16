@@ -2,8 +2,9 @@ package com.mybank.service;
 
 import com.mybank.converter.CreditCardConverter;
 import com.mybank.dto.CreditCardDTO;
-import com.mybank.dto.UserDTO;
 import com.mybank.entity.CreditCard;
+import com.mybank.entity.CreditCardStatus;
+import com.mybank.exception.NotEnoughCreditCardSum;
 import com.mybank.exception.UserLoginNotNullException;
 import com.mybank.service.data.CreditCardService;
 import org.springframework.stereotype.Service;
@@ -22,5 +23,25 @@ public class CreditCardControllerService {
         List<CreditCard> creditCardList = creditCardService.findUserCreditCardList(login);
         List<CreditCardDTO> creditCardDTOList = creditCardConverter.convertToListDto(creditCardList);
         return creditCardDTOList;
+    }
+
+    public CreditCardDTO setCreditCardStatus(String number, CreditCardStatus status) {
+        CreditCard creditCard = creditCardService.setCreditCardStatus(number, status);
+        CreditCardDTO creditCardDTO = creditCardConverter.convertToDto(creditCard);
+        return creditCardDTO;
+    }
+
+    public int sendSum(String senderCardNumber, String receiverCardNumber, int sum) {
+        CreditCardDTO senderCardDTO = findCreditCardByNumber(senderCardNumber);
+        if (senderCardDTO.getSum() < sum) {
+            throw new NotEnoughCreditCardSum("Sender credit card has not enough money");
+        }
+        return creditCardService.sendSum(senderCardNumber, receiverCardNumber, sum);
+    }
+
+    public CreditCardDTO findCreditCardByNumber(String number) {
+        CreditCard creditCard = creditCardService.findCreditCardByNumber(number);
+        CreditCardDTO creditCardDTO = creditCardConverter.convertToDto(creditCard);
+        return creditCardDTO;
     }
 }
