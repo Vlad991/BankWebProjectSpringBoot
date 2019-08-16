@@ -53,10 +53,11 @@ public class WebSocketController extends TextWebSocketHandler {
                     return;
                 }
 
-                activeUsers.put(user.getLogin(), session);
+                activeClients.put(user.getLogin(), session);
+                // activeManagers.put(...)
                 sendActiveClientList();
                 sendActiveManagerList(); // todo ???
-                sendMessages(session);
+//                sendMessages(session); // todo
 
             } else {
                 session.close();
@@ -85,47 +86,47 @@ public class WebSocketController extends TextWebSocketHandler {
                 return;
             }
 
-            switch (receiveMessage.getType()) {
-                case PRIVATE: {
-                    if (receiveMessage.getReceiver() == null) {
-                        sendErrorMessage(session, "Receiver is required.");
-                        return;
-                    }
-                    if (userService.findUserByLogin(receiveMessage.getReceiver()) == null) {
-                        sendErrorMessage(session, "Receiver was not found.");
-                        return;
-                    }
-
-                    if (receiveMessage.getMessage() == null) {
-                        sendErrorMessage(session, "Message is required");
-                        return;
-                    }
-                    WebSocketSession receiverSession = activeUsers.get(receiveMessage.getReceiver());
-                    if (receiverSession == null) {
-                        webSocketService.saveMessage(login,
-                                receiveMessage.getReceiver(),
-                                receiveMessage.getMessage());
-                        return;
-                    }
-
-                    sendPrivateMessage(receiverSession, login, receiveMessage.getMessage());
-                    break;
-                }
-                case COMMENT: {
-                    if (receiveMessage.getMessage() == null) {
-                        sendErrorMessage(session, "message is required");
-                        return;
-                    }
-                    sendComment(login, receiveMessage.getMessage());
-                    break;
-                }
-                case LOGOUT: {
-                    activeUsers.remove(login);
-                    sendActiveUsersList();
-                    session.close();
-                    break;
-                }
-            }
+//            switch (receiveMessage.getType()) { todo
+//                case PRIVATE: {
+//                    if (receiveMessage.getReceiver() == null) {
+//                        sendErrorMessage(session, "Receiver is required.");
+//                        return;
+//                    }
+//                    if (userService.findUserByLogin(receiveMessage.getReceiver()) == null) {
+//                        sendErrorMessage(session, "Receiver was not found.");
+//                        return;
+//                    }
+//
+//                    if (receiveMessage.getMessage() == null) {
+//                        sendErrorMessage(session, "Message is required");
+//                        return;
+//                    }
+//                    WebSocketSession receiverSession = activeUsers.get(receiveMessage.getReceiver());
+//                    if (receiverSession == null) {
+//                        webSocketService.saveMessage(login,
+//                                receiveMessage.getReceiver(),
+//                                receiveMessage.getMessage());
+//                        return;
+//                    }
+//
+//                    sendPrivateMessage(receiverSession, login, receiveMessage.getMessage());
+//                    break;
+//                }
+//                case COMMENT: {
+//                    if (receiveMessage.getMessage() == null) {
+//                        sendErrorMessage(session, "message is required");
+//                        return;
+//                    }
+//                    sendComment(login, receiveMessage.getMessage());
+//                    break;
+//                }
+//                case LOGOUT: {
+//                    activeUsers.remove(login);
+//                    sendActiveUsersList();
+//                    session.close();
+//                    break;
+//                }
+//            }
 
         } catch (IOException e) {
             log.error(e.getMessage());
@@ -137,8 +138,17 @@ public class WebSocketController extends TextWebSocketHandler {
         super.afterConnectionClosed(session, status);
     }
 
-    private void sendErrorMessage() {
-        rrrr
+    private void sendErrorMessage(WebSocketSession session, String message) {
+        try {
+            SendMessage sendMessage = new SendMessage();
+            sendMessage.setMessage(message);
+            sendMessage.setSender("system");
+            sendMessage.setType(MessageType.PRIVATE);  // todo other message type (not private)
+            TextMessage textMessage = new TextMessage(mapper.writeValueAsString(sendMessage));
+            session.sendMessage(textMessage);
+        } catch(IOException e){
+            log.error(e.getMessage());
+        }
     }
 
     private void sendActiveClientList() {
@@ -172,14 +182,14 @@ public class WebSocketController extends TextWebSocketHandler {
     }
 
     private void sendAll(TextMessage textMessage) {
-        activeUsers.entrySet().stream()
-                .map(entry -> entry.getValue())
-                .forEach(session -> {
-                    try {
-                        session.sendMessage(textMessage);
-                    } catch (IOException e) {
-                        log.error(e.getMessage());
-                    }
-                });
+//        activeUsers.entrySet().stream()
+//                .map(entry -> entry.getValue())
+//                .forEach(session -> {
+//                    try {
+//                        session.sendMessage(textMessage);
+//                    } catch (IOException e) {
+//                        log.error(e.getMessage());
+//                    }
+//                }); todo
     }
 }

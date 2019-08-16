@@ -141,7 +141,7 @@ public class SecurityConfig extends KeycloakWebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.PATCH, "/blocked/**").hasRole("ADMIN")
                 .antMatchers(HttpMethod.DELETE, "/blocked/**").hasRole("ADMIN")
                 .antMatchers(HttpMethod.POST, "/registration").permitAll()
-                .antMatchers("/socket/**").permitAll()
+                .antMatchers("/socket/**").permitAll() //todo (client list, manager list)
                 .anyRequest().permitAll()
                 .and()
                 // logout settings - copied from KeycloakWebSecurityConfigurerAdapter

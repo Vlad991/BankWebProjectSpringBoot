@@ -8,7 +8,6 @@ import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
-import javax.validation.constraints.Min;
 import java.io.Serializable;
 
 @Setter

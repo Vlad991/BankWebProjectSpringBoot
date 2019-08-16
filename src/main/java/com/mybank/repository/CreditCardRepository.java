@@ -13,4 +13,6 @@ public interface CreditCardRepository extends JpaRepository<CreditCard, Long> {
 
     @Query("SELECT number FROM creditcards")
     List<String> getAllNumbers();
+
+    List<CreditCard> findCreditCardsByClient_Login(String login);
 }

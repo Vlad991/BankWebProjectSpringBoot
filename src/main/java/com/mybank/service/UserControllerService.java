@@ -3,6 +3,7 @@ package com.mybank.service;
 import com.mybank.converter.UserConverter;
 import com.mybank.dto.UserDTO;
 import com.mybank.entity.BlockingReason;
+import com.mybank.entity.User;
 import com.mybank.exception.UserLoginNotNullException;
 import com.mybank.service.data.UserService;
 import org.springframework.stereotype.Service;
@@ -21,6 +22,15 @@ public class UserControllerService {
 
     public List<UserDTO> findAll() {
         return userConverter.convertToListDto(userService.findAll());
+    }
+
+    public UserDTO findUserByLogin(String login) {
+        if (login == null) {
+            throw new UserLoginNotNullException("User login is required");
+        }
+        User user = userService.findUserByLogin(login);
+        UserDTO userDTO = userConverter.convertToDto(user);
+        return userDTO;
     }
 
     public UserDTO blockUser(String login, BlockingReason reason) {

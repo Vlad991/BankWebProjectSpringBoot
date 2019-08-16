@@ -26,6 +26,10 @@ public class CreditCardService {
         return creditCardRepository.findByNumber(number);
     }
 
+    public List<CreditCard> findUserCreditCardList(String login) {
+        return creditCardRepository.findCreditCardsByClient_Login(login);
+    }
+
     @Transactional
     public CreditCard setCreditCardStatus(String number, CreditCardStatus status) {
         CreditCard creditCard = creditCardRepository.findByNumber(number);
