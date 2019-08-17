@@ -148,6 +148,8 @@ public class SecurityConfig extends KeycloakWebSecurityConfigurerAdapter {
                 // Admin
                 .antMatchers("/admin/**").hasRole("ADMIN")
                 .antMatchers("/admin-socket/**").hasRole("ADMIN")
+                // Credit Card
+                .antMatchers("/card/**").hasRole("OWNER")
 
                 .anyRequest().permitAll()
                 .and()
