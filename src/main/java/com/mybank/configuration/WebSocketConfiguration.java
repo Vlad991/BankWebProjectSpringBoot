@@ -1,7 +1,8 @@
 package com.mybank.configuration;
 
-import com.mybank.controller.WebSocketController;
+import com.mybank.controller.websocket.AdminWebSocketController;
 import com.mybank.controller.websocket.ClientWebSocketController;
+import com.mybank.controller.websocket.ManagerWebSocketController;
 import com.mybank.interceptor.AdminSecurityInterceptor;
 import com.mybank.interceptor.ClientSecurityInterceptor;
 import com.mybank.interceptor.ManagerSecurityInterceptor;
