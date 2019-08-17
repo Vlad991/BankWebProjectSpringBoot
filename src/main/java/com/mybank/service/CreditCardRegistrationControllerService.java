@@ -8,6 +8,7 @@ import com.mybank.entity.CreditCard;
 import com.mybank.entity.CreditCardStatus;
 import com.mybank.entity.User;
 import com.mybank.service.data.CreditCardRegistrationService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +17,7 @@ import java.util.List;
 @Service
 public class CreditCardRegistrationControllerService {
     private CreditCardConverter creditCardConverter;
+    @Autowired
     private UserConverter userConverter;
     private CreditCardRegistrationService creditCardRegistrationService;
     private ApplicationEventPublisher applicationEventPublisher;

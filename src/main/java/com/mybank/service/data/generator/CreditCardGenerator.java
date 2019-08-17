@@ -2,6 +2,7 @@ package com.mybank.service.data.generator;
 
 import com.mybank.entity.carddate.CreditCardDate;
 import com.mybank.repository.CreditCardRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -10,6 +11,7 @@ import java.util.List;
 
 @Service
 public class CreditCardGenerator {
+    @Autowired
     private CreditCardRepository creditCardRepository;
 
     public String getNewCardNumber() {

@@ -6,12 +6,14 @@ import com.mybank.entity.User;
 import com.mybank.exception.CreditCardAlreadyExistsException;
 import com.mybank.repository.CreditCardRepository;
 import com.mybank.service.data.generator.CreditCardGenerator;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class CreditCardRegistrationService {
     private CreditCardRepository creditCardRepository;
+    @Autowired
     private CreditCardGenerator creditCardGenerator;
 
     public CreditCardRegistrationService(CreditCardRepository creditCardRepository) {
@@ -21,7 +23,7 @@ public class CreditCardRegistrationService {
     @Transactional
     public CreditCard registerNewCreditCard(CreditCard newCreditCard) {
         CreditCard oldCrediCard = creditCardRepository.findByNumber(newCreditCard.getNumber());
-        if (newCreditCard != null) {
+        if (oldCrediCard != null) {
             throw new CreditCardAlreadyExistsException("Credit card is already registered");
         }
         return creditCardRepository.save(newCreditCard);

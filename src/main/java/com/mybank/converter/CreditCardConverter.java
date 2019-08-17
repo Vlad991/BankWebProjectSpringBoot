@@ -2,6 +2,7 @@ package com.mybank.converter;
 
 import com.mybank.dto.CreditCardDTO;
 import com.mybank.entity.CreditCard;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -9,6 +10,7 @@ import java.util.stream.Collectors;
 
 @Component
 public class CreditCardConverter {
+    @Autowired
     private UserConverter userConverter;
 
     public CreditCardDTO convertToDto(CreditCard card) {

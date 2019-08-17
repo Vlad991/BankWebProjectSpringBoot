@@ -4,6 +4,7 @@ import com.mybank.dto.CreditCardDTO;
 import com.mybank.dto.UserDTO;
 import com.mybank.service.CreditCardRegistrationControllerService;
 import com.mybank.service.UserRegistrationControllerService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,6 +15,7 @@ import javax.validation.Valid;
 @RequestMapping
 public class UserRegistrationController {
     private UserRegistrationControllerService userRegistrationControllerService;
+    @Autowired
     private CreditCardRegistrationControllerService creditCardRegistrationControllerService;
 
     public UserRegistrationController(UserRegistrationControllerService userRegistrationControllerService) {
@@ -23,7 +25,7 @@ public class UserRegistrationController {
     @PostMapping(value = "/registration")
     public ResponseEntity registration(@Valid @RequestBody UserDTO userDTO) {
         CreditCardDTO newCreditCardDTO = creditCardRegistrationControllerService.getNewCreditCardForUser(userDTO);
-        creditCardRegistrationControllerService.registerNewCreditCard(newCreditCardDTO);
+//        creditCardRegistrationControllerService.registerNewCreditCard(newCreditCardDTO);
         userRegistrationControllerService.registerNewUser(userDTO);
         //todo redirect to card registration
         return ResponseEntity.accepted().build();
