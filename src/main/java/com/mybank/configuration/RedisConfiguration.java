@@ -34,7 +34,7 @@ public class RedisConfiguration {
     }
 
     @Bean
-    public RedisTemplate<String, HashMap<String, WebSocketSession>> redisActiveClientsTemplate() { //todo check ifhash is correct
+    public RedisTemplate<String, HashMap<String, WebSocketSession>> redisActiveUsersTemplate() { //todo check ifhashiscorrect
         RedisTemplate<String, HashMap<String, WebSocketSession>> template = new RedisTemplate<>();
         template.setConnectionFactory((jedisConnectionFactory()));
         return template;

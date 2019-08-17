@@ -8,20 +8,20 @@ import java.util.List;
 
 @Service
 public class CommentService {
-    private RedisTemplate<String, Comment> redisTemplate;
+    private RedisTemplate<String, Comment> redisCommentsTemplate;
 
-    public CommentService(RedisTemplate<String, Comment> redisTemplate) {
-        this.redisTemplate = redisTemplate;
+    public CommentService(RedisTemplate<String, Comment> redisCommentsTemplate) {
+        this.redisCommentsTemplate = redisCommentsTemplate;
     }
 
     public void saveComment(String senderLogin, String commentMessage) {
         Comment comment = new Comment();
         comment.setMessage(commentMessage);
         comment.setSender(senderLogin);
-        redisTemplate.opsForList().leftPush("comment", comment);
+        redisCommentsTemplate.opsForList().leftPush("comment", comment);
     }
 
     public List<Comment> getAllComments() {
-        return redisTemplate.opsForList().range("comment", 0, -1);
+        return redisCommentsTemplate.opsForList().range("comment", 0, -1);
     }
 }
