@@ -44,7 +44,7 @@ public class User {
     @Column(name = "phone", unique = true, nullable = false)
     private String phone;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "client", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<CreditCard> cardList;
 
     @OneToOne(mappedBy = "user")

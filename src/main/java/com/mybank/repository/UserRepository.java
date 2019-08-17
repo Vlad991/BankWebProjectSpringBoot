@@ -9,7 +9,7 @@ import org.springframework.data.repository.query.Param;
 public interface UserRepository extends JpaRepository<User, Long> {
     User findByLogin(String login);
 
-    @Modifying
-    @Query("DELETE FROM blocked_users b WHERE b.user = :user")
-    void removeBlocked(@Param("user") User user);
+//    @Modifying
+//    @Query("DELETE FROM blocked_users b WHERE b.user = :user")
+//    void removeBlocked(@Param("user") User user);
 }

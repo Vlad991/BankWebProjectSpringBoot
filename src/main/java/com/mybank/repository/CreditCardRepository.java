@@ -11,7 +11,7 @@ import java.util.List;
 public interface CreditCardRepository extends JpaRepository<CreditCard, Long> {
     CreditCard findByNumber(String number);
 
-    @Query("SELECT number FROM creditcards")
+    @Query(value = "SELECT number FROM creditcards", nativeQuery = true)
     List<String> getAllNumbers();
 
     List<CreditCard> findCreditCardsByClient_Login(String login);

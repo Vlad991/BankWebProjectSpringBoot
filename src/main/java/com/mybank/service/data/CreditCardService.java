@@ -12,7 +12,7 @@ import java.util.List;
 @Service
 public class CreditCardService {
     //    @Autowired todo
-    CreditCardRepository creditCardRepository;
+    private CreditCardRepository creditCardRepository;
 
     public CreditCardService(CreditCardRepository creditCardRepository) {
         this.creditCardRepository = creditCardRepository;
