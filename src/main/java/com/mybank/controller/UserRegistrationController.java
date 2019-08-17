@@ -25,6 +25,7 @@ public class UserRegistrationController {
         CreditCardDTO newCreditCardDTO = creditCardRegistrationControllerService.getNewCreditCardForUser(userDTO);
         creditCardRegistrationControllerService.registerNewCreditCard(newCreditCardDTO);
         userRegistrationControllerService.registerNewUser(userDTO);
+        //todo redirect to card registration
         return ResponseEntity.accepted().build();
     }
 }

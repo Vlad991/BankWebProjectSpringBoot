@@ -18,7 +18,7 @@ public class CreditCardRegistrationController {
         this.creditCardRegistrationControllerService = creditCardRegistrationControllerService;
     }
 
-    @PostMapping(value = "/cregistration")
+    @PostMapping(value = "/card-registration")
     public ResponseEntity registration(@Valid @RequestBody UserDTO userDTO) {
         CreditCardDTO newCreditCardDTO = creditCardRegistrationControllerService.getNewCreditCardForUser(userDTO);
         creditCardRegistrationControllerService.registerNewCreditCard(newCreditCardDTO);

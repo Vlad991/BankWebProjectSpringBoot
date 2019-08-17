@@ -136,15 +136,22 @@ public class SecurityConfig extends KeycloakWebSecurityConfigurerAdapter {
                 .authorizeRequests()
 
                 .antMatchers(HttpMethod.OPTIONS,"/**").permitAll()
-                .antMatchers(HttpMethod.GET,"/clients").hasAnyRole("ADMIN", "MANAGER")
-                .antMatchers(HttpMethod.GET, "/managers").hasRole("ADMIN")
-                .antMatchers(HttpMethod.PATCH, "/blocked/**").hasRole("ADMIN")
-                .antMatchers(HttpMethod.DELETE, "/blocked/**").hasRole("ADMIN")
+                // Registration
                 .antMatchers(HttpMethod.POST, "/registration").permitAll()
-                .antMatchers("/socket/**").permitAll() //todo (client list, manager list)
+                .antMatchers(HttpMethod.POST,"/card-registration").hasRole("CLIENT")
+                // Client
+                .antMatchers("/client/**").hasRole("CLIENT")
+                .antMatchers("/client-socket/**").hasRole("CLIENT")
+                //Manager
+                .antMatchers("/manager/**").hasRole("MANAGER")
+                .antMatchers("/manager-socket/**").hasRole("MANAGER")
+                // Admin
+                .antMatchers("/admin/**").hasRole("ADMIN")
+                .antMatchers("/admin-socket/**").hasRole("ADMIN")
+
                 .anyRequest().permitAll()
                 .and()
-                // logout settings - copied from KeycloakWebSecurityConfigurerAdapter
+                // Logout Settings - copied from KeycloakWebSecurityConfigurerAdapter
                 .logout()
                 .addLogoutHandler(keycloakLogoutHandler())
                 .logoutUrl("/sso/logout").permitAll()

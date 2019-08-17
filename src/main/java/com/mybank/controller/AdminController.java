@@ -1,9 +1,7 @@
 package com.mybank.controller;
 
-import com.mybank.dto.CreditCardDTO;
 import com.mybank.dto.UserDTO;
 import com.mybank.entity.BlockingReason;
-import com.mybank.service.CreditCardControllerService;
 import com.mybank.service.UserControllerService;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,16 +15,6 @@ public class AdminController {
 
     public AdminController(UserControllerService userControllerService) {
         this.userControllerService = userControllerService;
-    }
-
-    @GetMapping(value = "/active_managers")
-    public List<UserDTO> findActiveManagers() {
-        return userControllerService.findAll(); // todo only managers (in websocket)
-    }
-
-    @GetMapping(value = "/active_clients")
-    public List<UserDTO> findActiveClients() {
-        return userControllerService.findAll(); // todo only clients (in websocket)
     }
 
     @PatchMapping(value = "/block/{login}")
