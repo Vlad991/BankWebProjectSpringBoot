@@ -1,7 +1,7 @@
 package com.mybank.interceptor;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.apache.tomcat.util.codec.binary.Base64;
+import org.apache.commons.codec.binary.Base64;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.server.ServerHttpRequest;
 import org.springframework.http.server.ServerHttpResponse;
@@ -14,15 +14,15 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
-import static com.mybank.controller.WebSocketController.LOGIN;
+import static com.mybank.controller.AdminWebSocketController.ADMIN_LOGIN;
 
-public class SecurityInterceptor implements HandshakeInterceptor {
+public class AdminSecurityInterceptor implements HandshakeInterceptor {
 
     private ObjectMapper mapper = new ObjectMapper();
 
     private String serviceName;
 
-    public SecurityInterceptor(String serviceName){
+    public AdminSecurityInterceptor(String serviceName) {
         this.serviceName = serviceName;
     }
 
@@ -36,27 +36,27 @@ public class SecurityInterceptor implements HandshakeInterceptor {
 
         String token = httpServletRequest.getParameter("Authorization");
 
-        if(token == null){
+        if (token == null) {
             response.setStatusCode(HttpStatus.UNAUTHORIZED);
             return false;
         }
 
-        if(isExpired(token)){
+        if (isExpired(token)) {
             response.setStatusCode(HttpStatus.UNAUTHORIZED);
             return false;
         }
 
-        if(!isUserRole(token)){
+        if (!isAdminRole(token)) {
             response.setStatusCode(HttpStatus.FORBIDDEN);
             return false;
         }
 
-        String login = getUserLogin(token);
-        if(login == null){
+        String login = getAdminLogin(token);
+        if (login == null) {
             response.setStatusCode(HttpStatus.BAD_REQUEST);
             return false;
         }
-        attributes.put(LOGIN, login);
+        attributes.put(ADMIN_LOGIN, login);
         return true;
     }
 
@@ -69,22 +69,22 @@ public class SecurityInterceptor implements HandshakeInterceptor {
 
     private boolean isExpired(String token) throws IOException {
         Map<String, Object> json = getBodyTokenAsJson(token);
-        Integer expr = (Integer)json.get("exp");
-        long dataInMills = expr.intValue()*1000l;
+        Integer expr = (Integer) json.get("exp");
+        long dataInMills = expr.intValue() * 1000l;
         return System.currentTimeMillis() - dataInMills > 0;
     }
 
-    private boolean isUserRole(String token) throws IOException {
+    private boolean isAdminRole(String token) throws IOException {
         Map<String, Object> json = getBodyTokenAsJson(token);
-        Map<String, Object> resources = (Map<String, Object>)json.get("resource_access");
-        Map<String, Object> service = (Map<String, Object>)resources.get(serviceName);
-        List<String> roles = (List<String>)service.get("roles");
-        return roles.contains("ROLE_USER");
+        Map<String, Object> resources = (Map<String, Object>) json.get("resource_access");
+        Map<String, Object> service = (Map<String, Object>) resources.get(serviceName);
+        List<String> roles = (List<String>) service.get("roles");
+        return roles.contains("ROLE_ADMIN");
     }
 
-    private String getUserLogin(String token) throws IOException {
+    private String getAdminLogin(String token) throws IOException {
         Map<String, Object> json = getBodyTokenAsJson(token);
-        return (String)json.get("preferred_username");
+        return (String) json.get("preferred_username");
     }
 
     private Map<String, Object> getBodyTokenAsJson(String token) throws IOException {

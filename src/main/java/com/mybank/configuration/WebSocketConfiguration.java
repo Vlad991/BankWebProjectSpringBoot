@@ -1,7 +1,10 @@
 package com.mybank.configuration;
 
 import com.mybank.controller.WebSocketController;
-import com.mybank.interceptor.SecurityInterceptor;
+import com.mybank.controller.websocket.ClientWebSocketController;
+import com.mybank.interceptor.AdminSecurityInterceptor;
+import com.mybank.interceptor.ClientSecurityInterceptor;
+import com.mybank.interceptor.ManagerSecurityInterceptor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,14 +21,32 @@ public class WebSocketConfiguration implements WebSocketConfigurer { //todo
 
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
-        registry.addHandler(getWebSocketController(), "/socket")
+        registry.addHandler(clientWebSocketController(), "/client-socket")
                 .setAllowedOrigins("*")
-                .addInterceptors(new SecurityInterceptor(serviceName))
+                .addInterceptors(new ClientSecurityInterceptor(serviceName))
+                .withSockJS();
+        registry.addHandler(managerWebSocketController(), "/manager-socket")
+                .setAllowedOrigins("*")
+                .addInterceptors(new ManagerSecurityInterceptor(serviceName))
+                .withSockJS();
+        registry.addHandler(adminWebSocketController(), "/admin-socket")
+                .setAllowedOrigins("*")
+                .addInterceptors(new AdminSecurityInterceptor(serviceName))
                 .withSockJS();
     }
 
     @Bean
-    public WebSocketController getWebSocketController(){
-        return new WebSocketController();
+    public ClientWebSocketController clientWebSocketController(){
+        return new ClientWebSocketController();
+    }
+
+    @Bean
+    public ManagerWebSocketController managerWebSocketController(){
+        return new ManagerWebSocketController();
+    }
+
+    @Bean
+    public AdminWebSocketController adminWebSocketController(){
+        return new AdminWebSocketController();
     }
 }

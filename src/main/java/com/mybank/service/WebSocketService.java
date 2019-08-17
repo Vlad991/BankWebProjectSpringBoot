@@ -33,24 +33,18 @@ public class WebSocketService {
         commentService.saveComment(sender, messageToSend);
     }
 
-    public List<SendMessage> getAllMessages(String login) {
+    public List<SendMessage> getAllPrivateMessages(String login) {
         List<PrivateMessage> privateMessages = privateMessageService.getAllReceivedPrivateMessages(login);
         List<SendMessage> privateMessageDTOs = privateMessageConverter.toListPrivateMessageDTO(privateMessages);
+        return privateMessageDTOs;
+    }
+
+    public List<SendMessage> getAllComments() {
         List<Comment> comments = commentService.getAllComments();
         List<SendMessage> commentDTOs = null;
         if (comments != null) {
             commentDTOs = commentConverter.toListCommentDTO(comments);
         }
-        if (privateMessageDTOs != null && commentDTOs != null) {
-            privateMessageDTOs.addAll(commentDTOs);
-            return privateMessageDTOs;
-        }
-        if (privateMessageDTOs != null && commentDTOs == null) {
-            return privateMessageDTOs;
-        }
-        if (privateMessageDTOs == null && commentDTOs != null) {
-            return commentDTOs;
-        }
-        return null;
+        return commentDTOs;
     }
 }

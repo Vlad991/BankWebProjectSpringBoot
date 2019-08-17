@@ -1,4 +1,4 @@
-package com.mybank.controller;
+package com.mybank.controller.websocket;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mybank.dto.MessageType;
@@ -23,9 +23,9 @@ import java.util.concurrent.ConcurrentHashMap;
 
 @Slf4j
 //@Component
-public class WebSocketController extends TextWebSocketHandler {
+public class ClientWebSocketController extends TextWebSocketHandler {
 
-    public final static String LOGIN = "login";
+    public final static String CLIENT_LOGIN = "client_login";
 
     @Autowired
     private UserService userService;
@@ -45,10 +45,10 @@ public class WebSocketController extends TextWebSocketHandler {
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
         try {
-            String login = (String) session.getAttributes().get(LOGIN);
-            User user = userService.findUserByLogin(login);
-            if (user != null) {
-                if (user.getBlocked() != null) {
+            String login = (String) session.getAttributes().get(CLIENT_LOGIN);
+            User client = userService.findUserByLogin(login);
+            if (client != null) {
+                if (client.getBlocked() != null) {
                     sendErrorMessage(session, "You are blocked");
                     return;
                 }
@@ -86,47 +86,47 @@ public class WebSocketController extends TextWebSocketHandler {
                 return;
             }
 
-//            switch (receiveMessage.getType()) { todo
-//                case PRIVATE: {
-//                    if (receiveMessage.getReceiver() == null) {
-//                        sendErrorMessage(session, "Receiver is required.");
-//                        return;
-//                    }
-//                    if (userService.findUserByLogin(receiveMessage.getReceiver()) == null) {
-//                        sendErrorMessage(session, "Receiver was not found.");
-//                        return;
-//                    }
-//
-//                    if (receiveMessage.getMessage() == null) {
-//                        sendErrorMessage(session, "Message is required");
-//                        return;
-//                    }
-//                    WebSocketSession receiverSession = activeUsers.get(receiveMessage.getReceiver());
-//                    if (receiverSession == null) {
-//                        webSocketService.saveMessage(login,
-//                                receiveMessage.getReceiver(),
-//                                receiveMessage.getMessage());
-//                        return;
-//                    }
-//
-//                    sendPrivateMessage(receiverSession, login, receiveMessage.getMessage());
-//                    break;
-//                }
-//                case COMMENT: {
-//                    if (receiveMessage.getMessage() == null) {
-//                        sendErrorMessage(session, "message is required");
-//                        return;
-//                    }
-//                    sendComment(login, receiveMessage.getMessage());
-//                    break;
-//                }
-//                case LOGOUT: {
-//                    activeUsers.remove(login);
-//                    sendActiveUsersList();
-//                    session.close();
-//                    break;
-//                }
-//            }
+            switch (receiveMessage.getType()) {
+                case PRIVATE: {
+                    if (receiveMessage.getReceiver() == null) {
+                        sendErrorMessage(session, "Receiver is required.");
+                        return;
+                    }
+                    if (userService.findUserByLogin(receiveMessage.getReceiver()) == null) {
+                        sendErrorMessage(session, "Receiver was not found.");
+                        return;
+                    }
+
+                    if (receiveMessage.getMessage() == null) {
+                        sendErrorMessage(session, "Message is required");
+                        return;
+                    }
+                    WebSocketSession receiverSession = activeUsers.get(receiveMessage.getReceiver());
+                    if (receiverSession == null) {
+                        webSocketService.saveMessage(login,
+                                receiveMessage.getReceiver(),
+                                receiveMessage.getMessage());
+                        return;
+                    }
+
+                    sendPrivateMessage(receiverSession, login, receiveMessage.getMessage());
+                    break;
+                }
+                case COMMENT: {
+                    if (receiveMessage.getMessage() == null) {
+                        sendErrorMessage(session, "message is required");
+                        return;
+                    }
+                    sendComment(login, receiveMessage.getMessage());
+                    break;
+                }
+                case LOGOUT: {
+                    activeUsers.remove(login);
+                    sendActiveUsersList();
+                    session.close();
+                    break;
+                }
+            }
 
         } catch (IOException e) {
             log.error(e.getMessage());
