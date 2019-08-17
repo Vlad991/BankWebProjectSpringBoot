@@ -14,7 +14,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
-import static com.mybank.controller.AdminWebSocketController.ADMIN_LOGIN;
+import static com.mybank.controller.websocket.AdminWebSocketController.ADMIN_LOGIN;
 
 public class AdminSecurityInterceptor implements HandshakeInterceptor {
 

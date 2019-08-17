@@ -56,13 +56,12 @@ public class ClientWebSocketController extends TextWebSocketHandler {
             UserDTO client = userControllerService.findUserByLogin(login);
             if (client != null) {
                 if (client.isBlocked()) {
-                    sendErrorMessage(session, "You are blocked");
+                    sendErrorMessage(session, "You are blocked.");
                     return;
                 }
 
                 activeClientsService.addActiveClient(client.getLogin(), session);
-//                sendActiveClientList();
-//                sendActiveManagerList(); // todo
+                sendActiveClientList();
                 sendPrivateMessages(session);
                 sendComments(session);
             } else {
@@ -77,9 +76,9 @@ public class ClientWebSocketController extends TextWebSocketHandler {
     protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
         try {
             String login = (String) session.getAttributes().get(CLIENT_LOGIN);
-            UserDTO user = userControllerService.findUserByLogin(login);
+            UserDTO client = userControllerService.findUserByLogin(login);
 
-            if (user != null && user.isBlocked()) {
+            if (client != null && client.isBlocked()) {
                 session.close();
             }
 
@@ -150,7 +149,7 @@ public class ClientWebSocketController extends TextWebSocketHandler {
             SendMessage sendMessage = new SendMessage();
             sendMessage.setMessage(message);
             sendMessage.setSender("system");
-            sendMessage.setType(MessageType.PRIVATE);  // todo other message type (not private)
+            sendMessage.setType(MessageType.ERROR);  // todo other message type (not private)
             TextMessage textMessage = new TextMessage(mapper.writeValueAsString(sendMessage));
             session.sendMessage(textMessage);
         } catch (IOException e) {
@@ -184,7 +183,7 @@ public class ClientWebSocketController extends TextWebSocketHandler {
         }
     }
 
-    private void sendAllUsers(TextMessage textMessage) { // to send all managers active clients
+    private void sendAllUsers(TextMessage textMessage) { // to send all users a comment
         List<WebSocketSession> activeManagers = activeManagersService.getActiveManagerSessions();
         List<WebSocketSession> activeClients = activeClientsService.getActiveClientSessions();
         List<WebSocketSession> activeAdmins = activeAdminsService.getActiveAdminSessions();
@@ -224,13 +223,13 @@ public class ClientWebSocketController extends TextWebSocketHandler {
         }
     }
 
-    private void sendComment(String sender, String messageToSend) {
+    private void sendComment(String sender, String commentToSend) {
         try {
             SendMessage sendMessage = new SendMessage();
             sendMessage.setType(MessageType.COMMENT);
             sendMessage.setSender(sender);
-            sendMessage.setMessage(messageToSend);
-            webSocketService.saveComment(sender, messageToSend);
+            sendMessage.setMessage(commentToSend);
+            webSocketService.saveComment(sender, commentToSend);
             TextMessage textMessage = new TextMessage(mapper.writeValueAsString(sendMessage));
             sendAllUsers(textMessage);
         } catch (IOException e) {

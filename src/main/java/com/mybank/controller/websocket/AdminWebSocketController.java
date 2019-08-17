@@ -25,9 +25,9 @@ import java.util.Set;
 
 @Slf4j
 //@Component
-public class ManagerWebSocketController extends TextWebSocketHandler {
+public class AdminWebSocketController extends TextWebSocketHandler {
 
-    public final static String MANAGER_LOGIN = "manager_login";
+    public final static String ADMIN_LOGIN = "admin_login";
 
     @Autowired
     private UserControllerService userControllerService;
@@ -52,17 +52,11 @@ public class ManagerWebSocketController extends TextWebSocketHandler {
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
         try {
-            String login = (String) session.getAttributes().get(MANAGER_LOGIN);
-            UserDTO manager = userControllerService.findUserByLogin(login);
-            if (manager != null) {
-                if (manager.isBlocked()) {
-                    sendErrorMessage(session, "You are blocked.");
-                    return;
-                }
-
-                activeManagersService.addActiveManager(manager.getLogin(), session);
-                sendActiveManagerList();
-                sendPrivateMessages(session);
+            String login = (String) session.getAttributes().get(ADMIN_LOGIN);
+            UserDTO admin = userControllerService.findUserByLogin(login);
+            if (admin != null) {
+                activeAdminsService.addActiveAdmin(admin.getLogin(), session);
+//                sendActiveAdminList();
                 sendComments(session);
             } else {
                 session.close();
@@ -75,12 +69,8 @@ public class ManagerWebSocketController extends TextWebSocketHandler {
     @Override
     protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
         try {
-            String login = (String) session.getAttributes().get(MANAGER_LOGIN);
-            UserDTO manager = userControllerService.findUserByLogin(login);
-
-            if (manager != null && manager.isBlocked()) {
-                session.close();
-            }
+            String login = (String) session.getAttributes().get(ADMIN_LOGIN);
+            UserDTO admin = userControllerService.findUserByLogin(login);
 
             String jsonString = message.getPayload();
             ReceiveMessage receiveMessage = mapper.readValue(jsonString, ReceiveMessage.class);
@@ -92,32 +82,32 @@ public class ManagerWebSocketController extends TextWebSocketHandler {
             }
 
             switch (receiveMessage.getType()) {
-                case PRIVATE: {
-                    if (receiveMessage.getReceiver() == null) {
-                        sendErrorMessage(session, "Receiver is required.");
-                        return;
-                    }
-                    if (userControllerService.findUserByLogin(receiveMessage.getReceiver()) == null) {
-                        sendErrorMessage(session, "Receiver was not found.");
-                        return;
-                    }
-
-                    if (receiveMessage.getMessage() == null) {
-                        sendErrorMessage(session, "Message is required.");
-                        return;
-                    }
-                    WebSocketSession receiverSession =
-                            activeManagersService.getActiveManager(receiveMessage.getReceiver());
-                    if (receiverSession == null) {
-                        webSocketService.savePrivateMessage(login,
-                                receiveMessage.getReceiver(),
-                                receiveMessage.getMessage());
-                        return;
-                    }
-
-                    sendPrivateMessage(receiverSession, login, receiveMessage.getMessage());
-                    break;
-                }
+//                case PRIVATE: {
+//                    if (receiveMessage.getReceiver() == null) {
+//                        sendErrorMessage(session, "Receiver is required.");
+//                        return;
+//                    }
+//                    if (userControllerService.findUserByLogin(receiveMessage.getReceiver()) == null) {
+//                        sendErrorMessage(session, "Receiver was not found.");
+//                        return;
+//                    }
+//
+//                    if (receiveMessage.getMessage() == null) {
+//                        sendErrorMessage(session, "Message is required.");
+//                        return;
+//                    }
+//                    WebSocketSession receiverSession =
+//                            activeClientsService.getActiveClient(receiveMessage.getReceiver());
+//                    if (receiverSession == null) {
+//                        webSocketService.savePrivateMessage(login,
+//                                receiveMessage.getReceiver(),
+//                                receiveMessage.getMessage());
+//                        return;
+//                    }
+//
+//                    sendPrivateMessage(receiverSession, login, receiveMessage.getMessage());
+//                    break;
+//                }
                 case COMMENT: {
                     if (receiveMessage.getMessage() == null) {
                         sendErrorMessage(session, "Comment is required.");
@@ -127,8 +117,8 @@ public class ManagerWebSocketController extends TextWebSocketHandler {
                     break;
                 }
                 case LOGOUT: {
-                    activeManagersService.removeActiveManager(login);
-                    sendActiveManagerList();
+                    activeAdminsService.removeActiveAdmin(login);
+//                    sendActiveAdminList();
                     session.close();
                     break;
                 }
@@ -154,32 +144,6 @@ public class ManagerWebSocketController extends TextWebSocketHandler {
             session.sendMessage(textMessage);
         } catch (IOException e) {
             log.error(e.getMessage());
-        }
-    }
-
-    private void sendActiveManagerList() {
-        try {
-            Set<String> activeManagerLogins = activeManagersService.getActiveManagerLogins();
-            SendMessage sendMessage = new SendMessage();
-            sendMessage.setType(MessageType.ACTIVE_MANAGER_LIST);
-            sendMessage.setSender("system");
-            sendMessage.setMessage(null);
-            sendMessage.setActiveUsers(activeManagerLogins);
-            TextMessage textMessage = new TextMessage(mapper.writeValueAsString(sendMessage));
-            sendAllAdmins(textMessage);
-        } catch (IOException e) {
-            log.error(e.getMessage());
-        }
-    }
-
-    private void sendAllAdmins(TextMessage textMessage) { // to send all admins active managers list
-        List<WebSocketSession> activeAdmins = activeAdminsService.getActiveAdminSessions();
-        for (WebSocketSession activeAminSession : activeAdmins) {
-            try {
-                activeAminSession.sendMessage(textMessage);
-            } catch (IOException e) {
-                log.error(e.getMessage());
-            }
         }
     }
 
@@ -210,18 +174,18 @@ public class ManagerWebSocketController extends TextWebSocketHandler {
         }
     }
 
-    private void sendPrivateMessage(WebSocketSession receiveSession, String sender, String messageToSend) {
-        try {
-            SendMessage sendMessage = new SendMessage();
-            sendMessage.setType(MessageType.PRIVATE);
-            sendMessage.setSender(sender);
-            sendMessage.setMessage(messageToSend);
-            TextMessage textMessage = new TextMessage(mapper.writeValueAsString(sendMessage));
-            receiveSession.sendMessage(textMessage);
-        } catch (IOException e) {
-            log.error(e.getMessage());
-        }
-    }
+//    private void sendPrivateMessage(WebSocketSession receiveSession, String sender, String messageToSend) {
+//        try {
+//            SendMessage sendMessage = new SendMessage();
+//            sendMessage.setType(MessageType.PRIVATE);
+//            sendMessage.setSender(sender);
+//            sendMessage.setMessage(messageToSend);
+//            TextMessage textMessage = new TextMessage(mapper.writeValueAsString(sendMessage));
+//            receiveSession.sendMessage(textMessage);
+//        } catch (IOException e) {
+//            log.error(e.getMessage());
+//        }
+//    }
 
     private void sendComment(String sender, String messageToSend) {
         try {
@@ -237,17 +201,16 @@ public class ManagerWebSocketController extends TextWebSocketHandler {
         }
     }
 
-    private void sendPrivateMessages(WebSocketSession session) { // send all private messages when connection is established
-        try {
-            List<SendMessage> messages =
-                    webSocketService.getAllPrivateMessages((String) session.getAttributes().get(MANAGER_LOGIN));
-            for (SendMessage sendMessage : messages) {
-                session.sendMessage(new TextMessage(mapper.writeValueAsString(sendMessage)));
-            }
-        } catch (IOException e) {
-            log.error(e.getMessage());
-        }
-    }
+//    private void sendPrivateMessages(WebSocketSession session) { // send all private messages when connection is established
+//        try {
+//            List<SendMessage> messages = webSocketService.getAllPrivateMessages((String) session.getAttributes().get(CLIENT_LOGIN));
+//            for (SendMessage sendMessage : messages) {
+//                session.sendMessage(new TextMessage(mapper.writeValueAsString(sendMessage)));
+//            }
+//        } catch (IOException e) {
+//            log.error(e.getMessage());
+//        }
+//    }
 
     private void sendComments(WebSocketSession session) { // send all comments when connection is established
         try {
