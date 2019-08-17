@@ -4,9 +4,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mybank.dto.MessageType;
 import com.mybank.dto.ReceiveMessage;
 import com.mybank.dto.SendMessage;
-import com.mybank.entity.User;
+import com.mybank.dto.UserDTO;
+import com.mybank.service.UserControllerService;
 import com.mybank.service.WebSocketService;
-import com.mybank.service.data.UserService;
+import com.mybank.service.data.ActiveAdminsService;
+import com.mybank.service.data.ActiveClientsService;
+import com.mybank.service.data.ActiveManagersService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.socket.CloseStatus;
@@ -17,9 +20,8 @@ import org.springframework.web.socket.handler.TextWebSocketHandler;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
 import java.io.IOException;
-import java.util.Map;
+import java.util.List;
 import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
 
 @Slf4j
 //@Component
@@ -28,14 +30,19 @@ public class ClientWebSocketController extends TextWebSocketHandler {
     public final static String CLIENT_LOGIN = "client_login";
 
     @Autowired
-    private UserService userService;
+    private UserControllerService userControllerService;
+
+    @Autowired
+    private ActiveClientsService activeClientsService;
+
+    @Autowired
+    private ActiveManagersService activeManagersService;
+
+    @Autowired
+    private ActiveAdminsService activeAdminsService;
 
     @Autowired
     private WebSocketService webSocketService;
-
-    private Map<String, WebSocketSession> activeClients = new ConcurrentHashMap<>();
-
-    private Map<String, WebSocketSession> activeManagers = new ConcurrentHashMap<>();
 
     @Autowired
     private Validator validator;
@@ -46,18 +53,17 @@ public class ClientWebSocketController extends TextWebSocketHandler {
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
         try {
             String login = (String) session.getAttributes().get(CLIENT_LOGIN);
-            User client = userService.findUserByLogin(login);
+            UserDTO client = userControllerService.findUserByLogin(login);
             if (client != null) {
-                if (client.getBlocked() != null) {
+                if (client.isBlocked()) {
                     sendErrorMessage(session, "You are blocked");
                     return;
                 }
 
-                activeClients.put(user.getLogin(), session);
-                // activeManagers.put(...)
-                sendActiveClientList();
-                sendActiveManagerList(); // todo ???
-//                sendMessages(session); // todo
+                activeClientsService.addActiveClient(client.getLogin(), session);
+//                sendActiveClientList();
+//                sendActiveManagerList(); // todo ???
+                sendMessages(session); // todo
 
             } else {
                 session.close();
@@ -70,10 +76,10 @@ public class ClientWebSocketController extends TextWebSocketHandler {
     @Override
     protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
         try {
-            String login = (String) session.getAttributes().get("login");
-            User user = userService.findUserByLogin(login);
+            String login = (String) session.getAttributes().get(CLIENT_LOGIN);
+            UserDTO user = userControllerService.findUserByLogin(login);
 
-            if (user != null && user.getBlocked() != null) {
+            if (user != null && user.isBlocked()) {
                 session.close();
             }
 
@@ -92,18 +98,18 @@ public class ClientWebSocketController extends TextWebSocketHandler {
                         sendErrorMessage(session, "Receiver is required.");
                         return;
                     }
-                    if (userService.findUserByLogin(receiveMessage.getReceiver()) == null) {
+                    if (userControllerService.findUserByLogin(receiveMessage.getReceiver()) == null) {
                         sendErrorMessage(session, "Receiver was not found.");
                         return;
                     }
 
                     if (receiveMessage.getMessage() == null) {
-                        sendErrorMessage(session, "Message is required");
+                        sendErrorMessage(session, "Message is required.");
                         return;
                     }
                     WebSocketSession receiverSession = activeUsers.get(receiveMessage.getReceiver());
                     if (receiverSession == null) {
-                        webSocketService.saveMessage(login,
+                        webSocketService.savePrivateMessage(login,
                                 receiveMessage.getReceiver(),
                                 receiveMessage.getMessage());
                         return;
@@ -114,15 +120,15 @@ public class ClientWebSocketController extends TextWebSocketHandler {
                 }
                 case COMMENT: {
                     if (receiveMessage.getMessage() == null) {
-                        sendErrorMessage(session, "message is required");
+                        sendErrorMessage(session, "Comment is required");
                         return;
                     }
                     sendComment(login, receiveMessage.getMessage());
                     break;
                 }
                 case LOGOUT: {
-                    activeUsers.remove(login);
-                    sendActiveUsersList();
+                    activeClientsService.removeActiveClient(login);
+                    sendActiveClientList();
                     session.close();
                     break;
                 }
@@ -146,50 +152,99 @@ public class ClientWebSocketController extends TextWebSocketHandler {
             sendMessage.setType(MessageType.PRIVATE);  // todo other message type (not private)
             TextMessage textMessage = new TextMessage(mapper.writeValueAsString(sendMessage));
             session.sendMessage(textMessage);
-        } catch(IOException e){
+        } catch (IOException e) {
             log.error(e.getMessage());
         }
     }
 
     private void sendActiveClientList() {
         try {
-            Set<String> activeClientLogins = activeClients.keySet();
+            Set<String> activeClientLogins = activeClientsService.getActiveClientLogins();
             SendMessage sendMessage = new SendMessage();
             sendMessage.setType(MessageType.ACTIVE_CLIENT_LIST);
             sendMessage.setSender("system");
             sendMessage.setMessage(null);
             sendMessage.setActiveUsers(activeClientLogins);
             TextMessage textMessage = new TextMessage(mapper.writeValueAsString(sendMessage));
-            sendAll(textMessage);
+            sendAllManagers(textMessage);
         } catch (IOException e) {
             log.error(e.getMessage());
         }
     }
 
-    private void sendActiveManagerList() {
+    private void sendAllManagers(TextMessage textMessage) { // to send all managers active clients list
+        List<WebSocketSession> activeManagers = activeManagersService.getActiveManagerSessions();
+        for (WebSocketSession activeManagerSession : activeManagers) {
+            try {
+                activeManagerSession.sendMessage(textMessage);
+            } catch (IOException e) {
+                log.error(e.getMessage());
+            }
+        }
+    }
+
+    private void sendAllUsers(TextMessage textMessage) { // to send all managers active clients
+        List<WebSocketSession> activeManagers = activeManagersService.getActiveManagerSessions();
+        List<WebSocketSession> activeClients = activeClientsService.getActiveClientSessions();
+        List<WebSocketSession> activeAdmins = activeAdminsService.getActiveAdminSessions();
+        for (WebSocketSession activeManagerSession : activeManagers) {
+            try {
+                activeManagerSession.sendMessage(textMessage);
+            } catch (IOException e) {
+                log.error(e.getMessage());
+            }
+        }
+        for (WebSocketSession activeClientSession : activeClients) {
+            try {
+                activeClientSession.sendMessage(textMessage);
+            } catch (IOException e) {
+                log.error(e.getMessage());
+            }
+        }
+        for (WebSocketSession activeAdminSession : activeAdmins) {
+            try {
+                activeAdminSession.sendMessage(textMessage);
+            } catch (IOException e) {
+                log.error(e.getMessage());
+            }
+        }
+    }
+
+    private void sendPrivateMessage(WebSocketSession receiveSession, String sender, String messageToSend) {
         try {
-            Set<String> activeManagerLogins = activeManagers.keySet();
             SendMessage sendMessage = new SendMessage();
-            sendMessage.setType(MessageType.ACTIVE_MANAGER_LIST);
-            sendMessage.setSender("system");
-            sendMessage.setMessage(null);
-            sendMessage.setActiveUsers(activeManagerLogins);
+            sendMessage.setType(MessageType.PRIVATE);
+            sendMessage.setSender(sender);
+            sendMessage.setMessage(messageToSend);
             TextMessage textMessage = new TextMessage(mapper.writeValueAsString(sendMessage));
-            sendAll(textMessage);
+            receiveSession.sendMessage(textMessage);
         } catch (IOException e) {
             log.error(e.getMessage());
         }
     }
 
-    private void sendAll(TextMessage textMessage) {
-//        activeUsers.entrySet().stream()
-//                .map(entry -> entry.getValue())
-//                .forEach(session -> {
-//                    try {
-//                        session.sendMessage(textMessage);
-//                    } catch (IOException e) {
-//                        log.error(e.getMessage());
-//                    }
-//                }); todo
+    private void sendComment(String sender, String messageToSend) {
+        try {
+            SendMessage sendMessage = new SendMessage();
+            sendMessage.setType(MessageType.COMMENT);
+            sendMessage.setSender(sender);
+            sendMessage.setMessage(messageToSend);
+            webSocketService.saveComment(sender, messageToSend);
+            TextMessage textMessage = new TextMessage(mapper.writeValueAsString(sendMessage));
+            sendAllUsers(textMessage);
+        } catch (IOException e) {
+            log.error(e.getMessage());
+        }
+    }
+
+    private void sendMessages(WebSocketSession session) {
+        try {
+            List<SendMessage> messages = webSocketService.getAllMessages((String) session.getAttributes().get("login"));
+            for (SendMessage sendMessage : messages) {
+                session.sendMessage(new TextMessage(mapper.writeValueAsString(sendMessage)));
+            }
+        } catch (IOException e) {
+            log.error(e.getMessage());
+        }
     }
 }

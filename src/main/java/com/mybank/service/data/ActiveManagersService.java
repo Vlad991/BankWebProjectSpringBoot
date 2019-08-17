@@ -4,9 +4,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.web.socket.WebSocketSession;
 
-import java.util.HashMap;
-import java.util.LinkedHashSet;
-import java.util.Set;
+import java.util.*;
 
 @Service
 public class ActiveManagersService {
@@ -24,12 +22,21 @@ public class ActiveManagersService {
         redisActiveUsersTemplate.opsForHash().delete("active-manager", login);
     }
 
-    public Set<String> getActiveManagers() {
+    public Set<String> getActiveManagerLogins() {
         Set<String> logins = new LinkedHashSet<>(); // todo why HashSet?
         Set<Object> loginObjects = redisActiveUsersTemplate.opsForHash().keys("active-manager");
         for (Object loginObject : loginObjects) {
             logins.add(loginObject.toString());
         }
         return logins;
+    }
+
+    public List<WebSocketSession> getActiveManagerSessions() {
+        List<WebSocketSession> sessions = new ArrayList<>(); // todo why HashSet?
+        List<Object> sessionObjects = redisActiveUsersTemplate.opsForHash().values("active-manager");
+        for (Object sessionObject : sessionObjects) {
+            sessions.add((WebSocketSession) sessionObject);
+        }
+        return sessions;
     }
 }
