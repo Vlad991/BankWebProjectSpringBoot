@@ -14,6 +14,11 @@ public class ActiveManagersService {
         this.redisActiveUsersTemplate = redisActiveUsersTemplate;
     }
 
+
+    public WebSocketSession getActiveManager(String login) {
+        return (WebSocketSession) redisActiveUsersTemplate.opsForHash().get("active-manager", login);
+    }
+
     public void addActiveManager(String login, WebSocketSession session) {
         redisActiveUsersTemplate.opsForHash().put("active-manager", login, session);
     }

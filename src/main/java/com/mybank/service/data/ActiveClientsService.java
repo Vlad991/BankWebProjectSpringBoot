@@ -14,6 +14,10 @@ public class ActiveClientsService {
         this.redisActiveUsersTemplate = redisActiveUsersTemplate;
     }
 
+    public WebSocketSession getActiveClient(String login) {
+        return (WebSocketSession) redisActiveUsersTemplate.opsForHash().get("active-client", login);
+    }
+
     public void addActiveClient(String login, WebSocketSession session) {
         redisActiveUsersTemplate.opsForHash().put("active-client", login, session);
     }

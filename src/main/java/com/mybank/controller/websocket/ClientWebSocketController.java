@@ -62,9 +62,9 @@ public class ClientWebSocketController extends TextWebSocketHandler {
 
                 activeClientsService.addActiveClient(client.getLogin(), session);
 //                sendActiveClientList();
-//                sendActiveManagerList(); // todo ???
-                sendMessages(session); // todo
-
+//                sendActiveManagerList(); // todo
+                sendPrivateMessages(session);
+                sendComments(session);
             } else {
                 session.close();
             }
@@ -107,7 +107,8 @@ public class ClientWebSocketController extends TextWebSocketHandler {
                         sendErrorMessage(session, "Message is required.");
                         return;
                     }
-                    WebSocketSession receiverSession = activeUsers.get(receiveMessage.getReceiver());
+                    WebSocketSession receiverSession =
+                            activeClientsService.getActiveClient(receiveMessage.getReceiver());
                     if (receiverSession == null) {
                         webSocketService.savePrivateMessage(login,
                                 receiveMessage.getReceiver(),
@@ -237,9 +238,20 @@ public class ClientWebSocketController extends TextWebSocketHandler {
         }
     }
 
-    private void sendMessages(WebSocketSession session) {
+    private void sendPrivateMessages(WebSocketSession session) { // send all private messages when connection is established
         try {
-            List<SendMessage> messages = webSocketService.getAllMessages((String) session.getAttributes().get("login"));
+            List<SendMessage> messages = webSocketService.getAllPrivateMessages((String) session.getAttributes().get(CLIENT_LOGIN));
+            for (SendMessage sendMessage : messages) {
+                session.sendMessage(new TextMessage(mapper.writeValueAsString(sendMessage)));
+            }
+        } catch (IOException e) {
+            log.error(e.getMessage());
+        }
+    }
+
+    private void sendComments(WebSocketSession session) { // send all comments when connection is established
+        try {
+            List<SendMessage> messages = webSocketService.getAllComments();
             for (SendMessage sendMessage : messages) {
                 session.sendMessage(new TextMessage(mapper.writeValueAsString(sendMessage)));
             }
