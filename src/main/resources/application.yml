@@ -26,6 +26,11 @@ spring:
           contentType: application/json
           producer:
             headerMode: raw
+        card-event-output:
+          destination: card-event
+          contentType: applicatio/json
+          consumer:
+            headerMode: raw
 
 server:
   port: 8087
