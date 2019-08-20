@@ -13,11 +13,13 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class CreditCardRegistrationService {
     private CreditCardRepository creditCardRepository;
-    @Autowired
     private CreditCardGenerator creditCardGenerator;
+    private UserService userService;
 
-    public CreditCardRegistrationService(CreditCardRepository creditCardRepository) {
+    public CreditCardRegistrationService(CreditCardRepository creditCardRepository, CreditCardGenerator creditCardGenerator, UserService userService) {
         this.creditCardRepository = creditCardRepository;
+        this.creditCardGenerator = creditCardGenerator;
+        this.userService = userService;
     }
 
     @Transactional

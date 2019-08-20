@@ -16,6 +16,11 @@ public class CreditCardControllerService {
     private CreditCardService creditCardService;
     private CreditCardConverter creditCardConverter;
 
+    public CreditCardControllerService(CreditCardService creditCardService, CreditCardConverter creditCardConverter) {
+        this.creditCardService = creditCardService;
+        this.creditCardConverter = creditCardConverter;
+    }
+
     public List<CreditCardDTO> findUserCrediCardList(String login) {
         if (login == null) {
             throw new UserLoginNotNullException("User login is required");

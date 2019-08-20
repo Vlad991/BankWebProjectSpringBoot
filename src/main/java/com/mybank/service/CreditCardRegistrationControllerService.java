@@ -17,15 +17,13 @@ import java.util.List;
 @Service
 public class CreditCardRegistrationControllerService {
     private CreditCardConverter creditCardConverter;
-    @Autowired
     private UserConverter userConverter;
     private CreditCardRegistrationService creditCardRegistrationService;
     private ApplicationEventPublisher applicationEventPublisher;
 
-    public CreditCardRegistrationControllerService(CreditCardConverter creditCardConverter,
-                                                   CreditCardRegistrationService creditCardRegistrationService,
-                                                   ApplicationEventPublisher applicationEventPublisher) {
+    public CreditCardRegistrationControllerService(CreditCardConverter creditCardConverter, UserConverter userConverter, CreditCardRegistrationService creditCardRegistrationService, ApplicationEventPublisher applicationEventPublisher) {
         this.creditCardConverter = creditCardConverter;
+        this.userConverter = userConverter;
         this.creditCardRegistrationService = creditCardRegistrationService;
         this.applicationEventPublisher = applicationEventPublisher;
     }

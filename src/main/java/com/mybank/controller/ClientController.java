@@ -15,8 +15,9 @@ public class ClientController {
     private UserControllerService userControllerService;
     private CreditCardControllerService creditCardControllerService;
 
-    public ClientController(UserControllerService userControllerService) {
+    public ClientController(UserControllerService userControllerService, CreditCardControllerService creditCardControllerService) {
         this.userControllerService = userControllerService;
+        this.creditCardControllerService = creditCardControllerService;
     }
 
     @GetMapping(value = "/{login}/info")

@@ -6,8 +6,10 @@ import com.mybank.entity.User;
 import com.mybank.exception.UserAlreadyBlockedException;
 import com.mybank.exception.UserNotBlockedException;
 import com.mybank.exception.UserNotFoundException;
+import com.mybank.repository.AddressRepository;
 import com.mybank.repository.BlockedUserRepository;
 import com.mybank.repository.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,12 +17,14 @@ import java.util.List;
 
 @Service
 public class UserService {
-    //    @Autowired   //todo
     private UserRepository userRepository;
     private BlockedUserRepository blockedUserRepository;
+    private AddressRepository addressRepository;
 
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository, BlockedUserRepository blockedUserRepository, AddressRepository addressRepository) {
         this.userRepository = userRepository;
+        this.blockedUserRepository = blockedUserRepository;
+        this.addressRepository = addressRepository;
     }
 
     public List<User> findAll() {
@@ -30,6 +34,12 @@ public class UserService {
     public User findUserByLogin(String login) {
         return userRepository.findByLogin(login);
     }
+
+//    @Transactional
+//    public User saveUser(User user) {
+//        addressRepository.save(user.getAddress());
+//        return userRepository.save(user);
+//    }
 
     @Transactional
     public User blockUser(String login, BlockingReason reason) {

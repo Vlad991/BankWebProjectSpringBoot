@@ -15,18 +15,18 @@ import javax.validation.Valid;
 @RequestMapping
 public class UserRegistrationController {
     private UserRegistrationControllerService userRegistrationControllerService;
-    @Autowired
     private CreditCardRegistrationControllerService creditCardRegistrationControllerService;
 
-    public UserRegistrationController(UserRegistrationControllerService userRegistrationControllerService) {
+    public UserRegistrationController(UserRegistrationControllerService userRegistrationControllerService, CreditCardRegistrationControllerService creditCardRegistrationControllerService) {
         this.userRegistrationControllerService = userRegistrationControllerService;
+        this.creditCardRegistrationControllerService = creditCardRegistrationControllerService;
     }
 
     @PostMapping(value = "/registration")
     public ResponseEntity registration(@Valid @RequestBody UserDTO userDTO) {
-        CreditCardDTO newCreditCardDTO = creditCardRegistrationControllerService.getNewCreditCardForUser(userDTO);
-//        creditCardRegistrationControllerService.registerNewCreditCard(newCreditCardDTO);
         userRegistrationControllerService.registerNewUser(userDTO);
+        CreditCardDTO newCreditCardDTO = creditCardRegistrationControllerService.getNewCreditCardForUser(userDTO);
+        creditCardRegistrationControllerService.registerNewCreditCard(newCreditCardDTO);
         //todo redirect to card registration
         return ResponseEntity.accepted().build();
     }

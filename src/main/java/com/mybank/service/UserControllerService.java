@@ -33,6 +33,11 @@ public class UserControllerService {
         return userDTO;
     }
 
+//    public UserDTO saveUser(UserDTO userDTO) {
+//        return userConverter
+//                .convertToDto(userService.saveUser(userConverter.convertToEntity(userDTO)));
+//    }
+
     public UserDTO blockUser(String login, BlockingReason reason) {
         if (login == null) {
             throw new UserLoginNotNullException("User login is required");

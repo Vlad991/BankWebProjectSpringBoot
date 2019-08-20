@@ -7,7 +7,7 @@ spring:
     url: jdbc:mysql://localhost:3306/bankdb_2?verifyServerCertificate=false&useSSL=false&allowPublicKeyRetrieval=true&requireSSL=false&useLegacyDatetimeCode=false&amp&serverTimezone=UTC
   jpa:
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: update
 #  liquibase:
 #    change-log: classpath:db/changelog-master.xml
 

@@ -138,7 +138,7 @@ public class SecurityConfig extends KeycloakWebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.OPTIONS,"/**").permitAll()
                 // Registration
                 .antMatchers(HttpMethod.POST, "/registration").permitAll()
-                .antMatchers(HttpMethod.POST,"/card-registration").hasRole("CLIENT")
+                .antMatchers(HttpMethod.POST,"/card-registration").permitAll() //.hasRole("CLIENT")
                 // Client
                 .antMatchers("/client/**").hasRole("CLIENT")
                 .antMatchers("/client-socket/**").hasRole("CLIENT")

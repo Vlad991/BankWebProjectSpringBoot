@@ -5,8 +5,6 @@ import com.mybank.entity.BlockingReason;
 import com.mybank.service.UserControllerService;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RestController
 @RequestMapping("/admin")
 @CrossOrigin
