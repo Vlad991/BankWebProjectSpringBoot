@@ -28,7 +28,7 @@ spring:
             headerMode: raw
         card-event-output:
           destination: card-event
-          contentType: applicatio/json
+          contentType: application/json
           consumer:
             headerMode: raw
 

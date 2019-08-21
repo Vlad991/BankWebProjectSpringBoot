@@ -2,17 +2,12 @@ package com.mybank.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.mybank.entity.CreditCardStatus;
-import com.mybank.entity.User;
 import com.mybank.entity.carddate.CreditCardDate;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.validator.constraints.CreditCardNumber;
 
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.*;
 
 @Setter
 @Getter
@@ -20,7 +15,7 @@ import javax.validation.constraints.Size;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class CreditCardDTO {
     @NotNull(message = "Number is required")
-    @CreditCardNumber(ignoreNonDigitCharacters = true)
+//    @CreditCardNumber(ignoreNonDigitCharacters = true)
     private String number;   // todo card number
 
     @NotNull(message = "Date is required")
@@ -30,7 +25,7 @@ public class CreditCardDTO {
     private UserDTO client;
 
     @NotNull(message = "Code is required")
-    @Size(min = 000, max = 999, message = "Code must be XXX")
+    @Max(999)
     private int code;
 
     @Min(0)

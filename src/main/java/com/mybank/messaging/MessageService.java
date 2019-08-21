@@ -28,7 +28,7 @@ public class MessageService {
     }
 
     @EventListener
-    public void publishEvent(UserDTO userDTO){
+    public void publishUserEvent(UserDTO userDTO){
         Payload<UserDTO> payload = new Payload<>();
         payload.setEvent(EventType.CREATE.toString());
         payload.setObjectToSend(userDTO);
@@ -44,12 +44,12 @@ public class MessageService {
 
         MessageChannel channel = resolver.resolveDestination("user-event-output");
         if(!channel.send(message)){
-            log.error("Can not send message");
+            log.error("Can not send message.");
         }
     }
 
     @EventListener
-    public void publishEvent(CreditCardDTO cardDTO){
+    public void publishCardEvent(CreditCardDTO cardDTO){
         Payload<CreditCardDTO> payload = new Payload<>();
         payload.setEvent(EventType.CREATE.toString());
         payload.setObjectToSend(cardDTO);
@@ -65,7 +65,7 @@ public class MessageService {
 
         MessageChannel channel = resolver.resolveDestination("card-event-output");
         if(!channel.send(message)){
-            log.error("Can not send message");
+            log.error("Can not send message.");
         }
     }
 }
