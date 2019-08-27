@@ -19,8 +19,8 @@ public class ManagerController {
         this.userControllerService = userControllerService;
     }
 
-    @GetMapping(value = "/active_clients")
-    public List<UserDTO> findActiveClients() {
+    @GetMapping(value = "/clients")
+    public List<UserDTO> findAllClients() {
         return userControllerService.findAll(); // todo only clients (in websocket)
     }
 

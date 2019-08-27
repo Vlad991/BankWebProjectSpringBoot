@@ -149,7 +149,7 @@ public class ClientWebSocketController extends TextWebSocketHandler {
             SendMessage sendMessage = new SendMessage();
             sendMessage.setMessage(message);
             sendMessage.setSender("system");
-            sendMessage.setType(MessageType.ERROR);  // todo other message type (not private)
+            sendMessage.setType(MessageType.ERROR);
             TextMessage textMessage = new TextMessage(mapper.writeValueAsString(sendMessage));
             session.sendMessage(textMessage);
         } catch (IOException e) {

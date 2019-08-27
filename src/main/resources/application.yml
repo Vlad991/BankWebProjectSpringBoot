@@ -43,4 +43,4 @@ logging:
     root: DEBUG
 
 mybank:
-  serviceName: BankWebProjectSpringBoot
+  serviceName: bank-web
