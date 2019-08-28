@@ -129,7 +129,6 @@ public class SecurityConfig extends KeycloakWebSecurityConfigurerAdapter {
      */
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-//        super.configure(http);
         http
                 .csrf().disable()
                 .cors().disable()
@@ -159,7 +158,7 @@ public class SecurityConfig extends KeycloakWebSecurityConfigurerAdapter {
                 .antMatchers("/admin/**").hasRole("ADMIN")
                 .antMatchers("/admin-socket/**").permitAll()
                 // Credit Card
-                .antMatchers("/card/**").hasRole("OWNER")
+                .antMatchers("/card/**").hasRole("CLIENT")
 
                 .anyRequest().permitAll()
                 .and()

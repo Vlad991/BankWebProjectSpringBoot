@@ -24,18 +24,18 @@ public class CreditCardController {
         return creditCardControllerService.findCreditCardByNumber(number);
     }
 
-    @PutMapping(value = "/{number}/send")
-    public ResponseEntity sendSumToCreditCard(@PathVariable("number") String senderCardNumber,
-                                              @RequestBody String receiverCardNumber,
-                                              @RequestBody int sum) {
-        int sendedSum = creditCardControllerService.sendSum(senderCardNumber, receiverCardNumber, sum);
-        return ResponseEntity.accepted().build();
-    }
-
-    @PutMapping(value = "/{number}/block")
-    public CreditCardDTO blockCreditCard(@PathVariable("number") String number) {
-        return creditCardControllerService.setCreditCardStatus(number, CreditCardStatus.BLOCKED);
-    }
+//    @PutMapping(value = "/{number}/send")
+//    public ResponseEntity sendSumToCreditCard(@PathVariable("number") String senderCardNumber,
+//                                              @RequestBody String receiverCardNumber,
+//                                              @RequestBody int sum) {
+//        int sendedSum = creditCardControllerService.sendSum(senderCardNumber, receiverCardNumber, sum);
+//        return ResponseEntity.accepted().build();
+//    }
+//
+//    @PutMapping(value = "/{number}/block")
+//    public CreditCardDTO blockCreditCard(@PathVariable("number") String number) {
+//        return creditCardControllerService.setCreditCardStatus(number, CreditCardStatus.BLOCKED);
+//    }
 
 //    @GetMapping(value = "/{number}/settings")
 //    public List<CreditCardDTO> clientCards(@PathVariable("login") String login) {
