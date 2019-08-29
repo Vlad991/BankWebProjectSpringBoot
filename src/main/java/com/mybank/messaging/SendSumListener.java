@@ -6,6 +6,7 @@ import com.mybank.dto.SendSumDTO;
 import com.mybank.service.CreditCardControllerService;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.stream.annotation.EnableBinding;
 import org.springframework.cloud.stream.annotation.StreamListener;
 import org.springframework.messaging.Message;
@@ -18,6 +19,7 @@ import java.util.LinkedHashMap;
 @Setter
 @NoArgsConstructor
 public class SendSumListener {
+    @Autowired
     private CreditCardControllerService creditCardControllerService;
     private ObjectMapper objectMapper = new ObjectMapper();
 

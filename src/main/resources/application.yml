@@ -31,6 +31,16 @@ spring:
           contentType: application/json
           consumer:
             headerMode: raw
+        send-event-input:
+          destination: send-event
+          contentType: application/json
+          consumer:
+            headerMode: raw
+        block-event-input:
+          destination: block-event
+          contentType: application/json
+          consumer:
+            headerMode: raw
 
 server:
   port: 8087
@@ -39,8 +49,7 @@ redis:
   host: 127.0.0.1
 
 logging:
-  level:
-    root: DEBUG
+  level: DEBUG
 
 mybank:
   serviceName: bank-web

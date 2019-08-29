@@ -38,6 +38,7 @@ dependencyManagement {
         mavenBom 'org.springframework.cloud:spring-cloud-dependencies:Greenwich.M2'
         mavenBom "org.springframework.cloud:spring-cloud-stream-dependencies:Fishtown.M3"
         mavenBom 'org.springframework.boot:spring-boot-dependencies:2.1.1.RELEASE'
+ //       mavenBom "org.springframework.cloud:spring-cloud-dependencies:Finchley.RELEASE"
     }
 }
 
