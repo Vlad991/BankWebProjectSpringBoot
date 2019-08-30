@@ -30,10 +30,11 @@ public class PrivateMessageService {
         if (receiver != null) {
             privateMessage.setReceiver(receiver);
         }
+        privateMessage.setMessage(privateMessageBody);
         privateMessageRepository.save(privateMessage);
     }
 
     public List<PrivateMessage> getAllReceivedPrivateMessages(String receiverLogin) {
-        return privateMessageRepository.findByReceiver_Login(receiverLogin);
+        return privateMessageRepository.findAllByReceiver_Login(receiverLogin);
     }
 }
