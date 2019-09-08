@@ -21,7 +21,12 @@ public class CreditCardControllerService {
         this.creditCardConverter = creditCardConverter;
     }
 
-    public List<CreditCardDTO> findUserCrediCardList(String login) {
+    public List<CreditCardDTO> findAll() {
+        List<CreditCard> creditCardList = creditCardService.findAll();
+        return creditCardConverter.convertToListDto(creditCardList);
+    }
+
+    public List<CreditCardDTO> findUserCreditCardList(String login) {
         if (login == null) {
             throw new UserLoginNotNullException("User login is required");
         }

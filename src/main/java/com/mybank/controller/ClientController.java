@@ -27,7 +27,7 @@ public class ClientController {
 
     @GetMapping(value = "/{login}/cards")
     public List<CreditCardDTO> clientCards(@PathVariable("login") String login) {
-        List<CreditCardDTO> creditCardDTOList = creditCardControllerService.findUserCrediCardList(login);
+        List<CreditCardDTO> creditCardDTOList = creditCardControllerService.findUserCreditCardList(login);
         return creditCardDTOList;
     }
 
