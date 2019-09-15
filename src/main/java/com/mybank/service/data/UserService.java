@@ -54,6 +54,7 @@ public class UserService {
         blockedUser.setBlockingReason(reason);
         blockedUser.setUser(user);
         user.setBlocked(blockedUser);
+        blockedUserRepository.save(blockedUser);
         return userRepository.save(user);  // todo save(ban)???
     }
 

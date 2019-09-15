@@ -57,7 +57,9 @@ public class AdminWebSocketController extends TextWebSocketHandler {
             if (admin != null) {
                 activeAdminsService.addActiveAdmin(admin.getLogin(), session);
 //                sendActiveAdminList();
+//                sendPrivateMessages(session);
                 sendComments(session);
+//                sendActiveManagerList(session); //todo !!!!!!!!!!!!!!!!!
             } else {
                 session.close();
             }

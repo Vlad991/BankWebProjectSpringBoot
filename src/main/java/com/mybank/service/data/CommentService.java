@@ -4,6 +4,7 @@ import com.mybank.entity.Comment;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -18,7 +19,7 @@ public class CommentService {
         Comment comment = new Comment();
         comment.setMessage(commentMessage);
         comment.setSender(senderLogin);
-        redisCommentsTemplate.opsForList().leftPush("comment", comment);
+        redisCommentsTemplate.opsForList().rightPush("comment", comment);
     }
 
     public List<Comment> getAllComments() {

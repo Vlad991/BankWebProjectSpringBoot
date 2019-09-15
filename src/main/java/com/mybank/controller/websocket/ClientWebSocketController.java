@@ -107,7 +107,7 @@ public class ClientWebSocketController extends TextWebSocketHandler {
                         return;
                     }
                     WebSocketSession receiverSession =
-                            activeClientsService.getActiveClient(receiveMessage.getReceiver());
+                            activeManagersService.getActiveManager(receiveMessage.getReceiver());
                     if (receiverSession == null) {
                         webSocketService.savePrivateMessage(login,
                                 receiveMessage.getReceiver(),
@@ -141,6 +141,7 @@ public class ClientWebSocketController extends TextWebSocketHandler {
 
     @Override
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
+
         super.afterConnectionClosed(session, status);
     }
 

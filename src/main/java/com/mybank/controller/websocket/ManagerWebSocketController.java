@@ -64,6 +64,7 @@ public class ManagerWebSocketController extends TextWebSocketHandler {
                 sendActiveManagerList();
                 sendPrivateMessages(session);
                 sendComments(session);
+                sendActiveClientList(session);
             } else {
                 session.close();
             }
@@ -107,7 +108,7 @@ public class ManagerWebSocketController extends TextWebSocketHandler {
                         return;
                     }
                     WebSocketSession receiverSession =
-                            activeManagersService.getActiveManager(receiveMessage.getReceiver());
+                            activeClientsService.getActiveClient(receiveMessage.getReceiver());
                     if (receiverSession == null) {
                         webSocketService.savePrivateMessage(login,
                                 receiveMessage.getReceiver(),
@@ -255,6 +256,21 @@ public class ManagerWebSocketController extends TextWebSocketHandler {
             for (SendMessage sendMessage : messages) {
                 session.sendMessage(new TextMessage(mapper.writeValueAsString(sendMessage)));
             }
+        } catch (IOException e) {
+            log.error(e.getMessage());
+        }
+    }
+
+    private void sendActiveClientList(WebSocketSession session) {
+        try {
+            Set<String> activeClientLogins = activeClientsService.getActiveClientLogins();
+            SendMessage sendMessage = new SendMessage();
+            sendMessage.setType(MessageType.ACTIVE_CLIENT_LIST);
+            sendMessage.setSender("system");
+            sendMessage.setMessage(null);
+            sendMessage.setActiveUsers(activeClientLogins);
+            TextMessage textMessage = new TextMessage(mapper.writeValueAsString(sendMessage));
+            session.sendMessage(textMessage);
         } catch (IOException e) {
             log.error(e.getMessage());
         }
