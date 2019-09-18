@@ -12,7 +12,7 @@ public class AddressConverter {
     public AddressDTO convertToDto(Address address) {
         AddressDTO addressDTO = new AddressDTO();
         addressDTO.setCountry(address.getCountry());
-        addressDTO.setCountry(address.getCity());
+        addressDTO.setCity(address.getCity());
         addressDTO.setStreet(address.getStreet());
         addressDTO.setPostcode(address.getPostcode());
         return addressDTO;
@@ -21,7 +21,7 @@ public class AddressConverter {
     public Address convertToEntity(AddressDTO addressDTO) {
         Address address = new Address();
         address.setCountry(addressDTO.getCountry());
-        address.setCountry(addressDTO.getCity());
+        address.setCity(addressDTO.getCity());
         address.setStreet(addressDTO.getStreet());
         address.setPostcode(addressDTO.getPostcode());
         return address;
