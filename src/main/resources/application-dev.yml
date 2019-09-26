@@ -1,10 +1,10 @@
 spring:
   datasource:
-    username: root
-    password: root12345
+    username: kzm_vlad
+    password: 123root@
     driverClassName: com.mysql.cj.jdbc.Driver
     driverDialect: org.hibernate.dialect.MySQLDialect
-    url: jdbc:mysql://aac34gt0h8c31a.ccgmijtbjyhq.us-east-2.rds.amazonaws.com:3306/bankdb_2
+    url: jdbc:mysql://localhost:3306/bankdb_2?verifyServerCertificate=false&useSSL=false&allowPublicKeyRetrieval=true&requireSSL=false&useLegacyDatetimeCode=false&amp&serverTimezone=UTC
   jpa:
     hibernate:
       ddl-auto: update
@@ -15,15 +15,8 @@ spring:
     stream:
       kafka:
         binder:
-          brokers: pkc-43n10.us-central1.gcp.confluent.cloud:9092
-          auto-create-topics: true
-          replication-factor: 3
-          configuration:
-            sasl.mechanism: PLAIN
-            request.timeout.ms: 20000
-            retry.backoff.ms: 500
-            sasl.jaas.config: org.apache.kafka.common.security.plain.PlainLoginModule required username="FPSKPK5FCNCRI4MG" password="WeyTVtrpB3JFj/6Zaps3EZg+8EV2r3mdvKe1ULtfNQxttpgC/QIp5uRkk7kbUwZP";
-            security.protocol: SASL_SSL
+          zkNodes: localhost
+          brokers: localhost
       bindings:
         kafka:
           binder:
