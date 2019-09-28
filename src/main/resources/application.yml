@@ -49,6 +49,9 @@ spring:
           consumer:
             headerMode: raw
 
+  main:
+    allow-bean-definition-overriding: true
+
 server:
   port: 5000
 

@@ -56,13 +56,6 @@ public class SecurityConfig extends KeycloakWebSecurityConfigurerAdapter {
         return registrationBean;
     }
 
-    @Bean
-    public FilterRegistrationBean keycloakPreAuthActionsFilterRegistrationBean(KeycloakPreAuthActionsFilter filter) {
-        FilterRegistrationBean registrationBean = new FilterRegistrationBean(filter);
-        registrationBean.setEnabled(false);
-        return registrationBean;
-    }
-
     /**
      * Gets keycloak authentication provider.
      *
@@ -123,8 +116,8 @@ public class SecurityConfig extends KeycloakWebSecurityConfigurerAdapter {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(Arrays.asList("*"));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE"));
-        configuration.setAllowCredentials(true);
-        configuration.setAllowedHeaders(Arrays.asList("Authorization", "Cache-Control", "Content-Type"));
+ //       configuration.setAllowCredentials(true);
+ //       configuration.setAllowedHeaders(Arrays.asList("Authorization", "Cache-Control", "Content-Type"));
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;
