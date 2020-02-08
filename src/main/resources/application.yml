@@ -1,15 +1,13 @@
 spring:
   datasource:
-    username: root
-    password: root12345
+    username: kzm_vlad
+    password: 123root@
     driverClassName: com.mysql.cj.jdbc.Driver
     driverDialect: org.hibernate.dialect.MySQLDialect
-    url: jdbc:mysql://aac34gt0h8c31a.ccgmijtbjyhq.us-east-2.rds.amazonaws.com:3306/bankdb_2
+    url: jdbc:mysql://18.189.195.202:3306/bankdb_2
   jpa:
     hibernate:
       ddl-auto: update
-#  liquibase:
-#    change-log: classpath:db/changelog-master.xml
 
   cloud:
     stream:
@@ -53,7 +51,7 @@ spring:
     allow-bean-definition-overriding: true
 
 server:
-  port: 5000
+  port: 8087
 
 redis:
   host: 127.0.0.1
