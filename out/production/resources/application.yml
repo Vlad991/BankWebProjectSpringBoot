@@ -1,0 +1,64 @@
+spring:
+  datasource:
+    username: kzm_vlad
+    password: 123root@
+    driverClassName: com.mysql.cj.jdbc.Driver
+    driverDialect: org.hibernate.dialect.MySQLDialect
+    url: jdbc:mysql://18.189.195.202:3306/bankdb_2
+  jpa:
+    hibernate:
+      ddl-auto: update
+
+  cloud:
+    stream:
+      kafka:
+        binder:
+          brokers: pkc-43n10.us-central1.gcp.confluent.cloud:9092
+          auto-create-topics: true
+          replication-factor: 3
+          configuration:
+            sasl.mechanism: PLAIN
+            request.timeout.ms: 20000
+            retry.backoff.ms: 500
+            sasl.jaas.config: org.apache.kafka.common.security.plain.PlainLoginModule required username="FPSKPK5FCNCRI4MG" password="WeyTVtrpB3JFj/6Zaps3EZg+8EV2r3mdvKe1ULtfNQxttpgC/QIp5uRkk7kbUwZP";
+            security.protocol: SASL_SSL
+      bindings:
+        kafka:
+          binder:
+            headers: version, action, EventVersion, EntityVersion
+        user-event-output:
+          destination: user-event
+          contentType: application/json
+          producer:
+            headerMode: raw
+        card-event-output:
+          destination: card-event
+          contentType: application/json
+          consumer:
+            headerMode: raw
+        send-event-input:
+          destination: send-event
+          contentType: application/json
+          consumer:
+            headerMode: raw
+        block-event-input:
+          destination: block-event
+          contentType: application/json
+          consumer:
+            headerMode: raw
+
+  main:
+    allow-bean-definition-overriding: true
+
+server:
+  port: 8087
+
+redis:
+  host: 127.0.0.1
+
+logging:
+  level:
+    root: INFO
+
+mybank:
+  serviceName: bank-web
